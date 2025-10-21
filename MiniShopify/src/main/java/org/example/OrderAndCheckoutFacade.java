@@ -9,8 +9,8 @@ public class OrderAndCheckoutFacade {
     }
 
     public void orderSomething (int productID){
-        shop.getProducts();
-            for (ProductManagementFacade p : shop.getProducts()){
+        shop.getProductManager().getProducts();
+            for (Product p : shop.getProductManager().getProducts()){
                 if (p.getProductID() == productID) {
                     if (p.getQuantity() > 0){
                         p.setQuantityMinus1();
