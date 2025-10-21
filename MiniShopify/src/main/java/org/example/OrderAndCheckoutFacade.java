@@ -11,16 +11,17 @@ public class OrderAndCheckoutFacade {
     public void orderSomething (int productID){
         shop.getProducts();
             for (ProductManagementFacade p : shop.getProducts()){
-
-                if (p.getQuantity() > 0){
-                    if (p.getProductID() == productID) {
+                if (p.getProductID() == productID) {
+                    if (p.getQuantity() > 0){
                         p.setQuantityMinus1();
                     }
                     else {
                         System.out.println("There is no more of this product, error in ordering");
                     }
                 }
-
+                else {
+                    System.out.println("Could not find product");
+                }
             }
     }
 

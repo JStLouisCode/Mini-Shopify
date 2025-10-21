@@ -40,6 +40,33 @@ public class ShopManagementFacade {
         return ShopType;
     }
 
+    public void createProduct (String productName, int productID, String productDescription, double productPrice, String productCategory, int quantity) {
+        products.add(new ProductManagementFacade(productName, productID,productDescription,productPrice,productCategory, quantity, this));
+    }
+
+    public ArrayList<ProductManagementFacade> getProducts() {
+        return products;
+    }
+
+    public ProductManagementFacade findProductByID(int productID) {
+        for (ProductManagementFacade p : products){
+            if (p.getProductID() == productID){
+                return p;
+            }
+        }
+        System.out.println("Could not find product");
+        return null;
+    }
+
+    public void removeProductByID(int productID) {
+        for (ProductManagementFacade p : products){
+            if (p.getProductID() == productID) {
+                products.remove(p);
+            }
+    }
+    }
+    public void removeProductByObject(ProductManagementFacade p) {products.remove(p);}
+
     public void setShopType(String shopType) {
         ShopType = shopType;
     }
@@ -51,11 +78,5 @@ public class ShopManagementFacade {
 
     public int getId() {return id;}
 
-    public void createProduct (String productName, int productID, String productDescription, double productPrice, String productCategory, int quantity) {
-        products.add(new ProductManagementFacade(productName, productID,productDescription,productPrice,productCategory, quantity, this));
-    }
 
-    public ArrayList<ProductManagementFacade> getProducts() {
-        return products;
-    }
 }
