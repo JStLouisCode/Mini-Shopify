@@ -18,7 +18,7 @@ public class ShopControllor {
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("shops", shopRepository.findAll());
-        return "index";
+        return "homepage";
     }
 
     @GetMapping("/create-shop")
