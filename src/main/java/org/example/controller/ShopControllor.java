@@ -42,4 +42,11 @@ public class ShopControllor {
     public String orders() {
         return "orders";
     }
+
+    @GetMapping("/select-shop")
+    public String selectShop(Model model) {
+        model.addAttribute("shops", shopRepository.findAll());
+        return "select-shop";
+    }
+
 }
