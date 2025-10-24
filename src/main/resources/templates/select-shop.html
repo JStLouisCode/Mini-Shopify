@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Shop to Edit</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Select a Shop to Edit</h1>
+        <p>Choose which shop you would like to customize</p>
+    </div>
+
+    <div th:if="${#lists.isEmpty(shops)}" class="info empty-state">
+        <h3>No Shops Available</h3>
+        <p>You haven't created any shops yet.</p>
+        <a href="/create-shop" class="btn">Create Your First Shop</a>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(shops)}" class="shop-selection">
+        <div th:each="shop : ${shops}" class="shop-card-select">
+            <div class="shop-info">
+                <h2 th:text="${shop.name}">Shop Name</h2>
+                <div class="shop-meta">
+                    <span class="badge" th:if="${shop.tags}" th:text="${shop.tags}">Tags</span>
+                    <span class="shop-type" th:if="${shop.businessType}" th:text="${shop.businessType}">Business Type</span>
+                </div>
+                <p class="shop-description" th:text="${shop.description} ?: 'No description available'">Description</p>
+            </div>
+            <div class="shop-select-actions">
+                <a th:href="@{/edit-shop/{id}(id=${shop.id})}" class="btn btn-primary">Edit This Shop</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-link">
+        <a href="/">&larr; Back to Home</a>
+    </div>
+</div>
+</body>
+</html>
