@@ -12,7 +12,7 @@
         <p>Choose which shop you would like to customize</p>
     </div>
 
-    <div th:if="${#lists.isEmpty(shops)}" class="info empty-state">
+    <div th:if="${#lists.isEmpty(shops)}" class="empty-state">
         <h3>No Shops Available</h3>
         <p>You haven't created any shops yet.</p>
         <a href="/create-shop" class="btn">Create Your First Shop</a>
