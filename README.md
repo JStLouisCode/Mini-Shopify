@@ -15,7 +15,7 @@ This application is an e-commerce platform that allows merchants to create their
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 * **Backend:** Spring Boot, Spring MVC, Spring Data JPA
 * **Frontend:** Thymeleaf, HTML, CSS
