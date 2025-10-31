@@ -2,6 +2,7 @@ package org.example.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.model.Shop;
+import org.example.repository.ShopRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -28,13 +30,20 @@ class ShopControllerTest {
     private ObjectMapper objectMapper;
 
     private Shop sampleShop;
+    @Autowired
+    private ShopRepository shopRepository;
 
     @BeforeEach
     void setUp() {
+        shopRepository.deleteAll();
         sampleShop = new Shop();
         sampleShop.setName("Test Shop");
         sampleShop.setDescription("A test shop for unit testing");
-        sampleShop.setTags("test, sample, shop");
+        sampleShop.setTags(Arrays.asList("test", "sample", "shop"));
+        sampleShop.setBusinessType("Retail");
+        sampleShop.setCurrency("CAD");
+        sampleShop.setContact("123-4567");
+        sampleShop.setSocialMediaLinks("@testshop");
     }
 
     // ===== CREATE TESTS =====
@@ -163,7 +172,7 @@ class ShopControllerTest {
         Shop updatedShop = new Shop();
         updatedShop.setName("Updated Shop Name");
         updatedShop.setDescription("Updated description");
-        updatedShop.setTags("updated, tags");
+        updatedShop.setTags(Arrays.asList("updated", "tags"));
 
         mockMvc.perform(put(location)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -279,4 +288,94 @@ class ShopControllerTest {
                         .contentType(""))
                 .andExpect(status().isOk());
     }
+
+    // ===== VIEW EXISTING SHOPS PAGE TESTS =====
+
+    @Test
+    void viewExistingShops_ReturnsCorrectViewName() throws Exception {
+        mockMvc.perform(get("/view-existing-shops"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("view-existing-shops"));
+    }
+
+    @Test
+    void viewExistingShops_AddsShopsToModel() throws Exception {
+        mockMvc.perform(get("/view-existing-shops"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("shops"));
+    }
+
+    @Test
+    void viewExistingShops_EmptyDatabase_ReturnsEmptyList() throws Exception {
+        mockMvc.perform(get("/view-existing-shops"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("shops"))
+                .andExpect(model().attribute("shops", org.hamcrest.Matchers.empty()));
+    }
+
+
+    @Test
+    void viewExistingShops_WithExistingShops_ShopsListInModel() throws Exception {
+        mockMvc.perform(post("/shops")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sampleShop)))
+                .andExpect(status().isCreated());
+
+        // Verify shop appears in view
+        mockMvc.perform(get("/view-existing-shops"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("shops"))
+                .andExpect(model().attribute("shops", org.hamcrest.Matchers.not(org.hamcrest.Matchers.empty())))
+                .andExpect(model().attribute("shops", org.hamcrest.Matchers.hasSize(org.hamcrest.Matchers.greaterThanOrEqualTo(1))));
+    }
+
+    @Test
+    void viewExistingShops_WithMultipleShops_AllShopsInModel() throws Exception {
+        // Create multiple shops
+        mockMvc.perform(post("/shops")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sampleShop)))
+                .andExpect(status().isCreated());
+        mockMvc.perform(post("/shops")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sampleShop)))
+                .andExpect(status().isCreated());
+        mockMvc.perform(post("/shops")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sampleShop)))
+                .andExpect(status().isCreated());
+
+        // Verify all shops are returned
+        mockMvc.perform(get("/view-existing-shops"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("shops"))
+                .andExpect(model().attribute("shops", org.hamcrest.Matchers.hasSize(org.hamcrest.Matchers.greaterThanOrEqualTo(3))));
+    }
+
+
+    @Test
+    void viewExistingShops_VerifyShopDetails_AllFieldsPresent() throws Exception {
+        mockMvc.perform(post("/shops")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sampleShop)))
+                .andExpect(status().isCreated());
+
+        // Verify the shop appears with all its details
+        mockMvc.perform(get("/view-existing-shops"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("shops"))
+                .andExpect(model().attribute("shops",
+                        org.hamcrest.Matchers.hasItem(
+                                org.hamcrest.Matchers.allOf(
+                                        org.hamcrest.Matchers.hasProperty("name", org.hamcrest.Matchers.is(sampleShop.getName())),
+                                        org.hamcrest.Matchers.hasProperty("description", org.hamcrest.Matchers.is(sampleShop.getDescription())),
+                                        org.hamcrest.Matchers.hasProperty("tags", org.hamcrest.Matchers.contains("test", "sample", "shop")),
+                                        org.hamcrest.Matchers.hasProperty("businessType", org.hamcrest.Matchers.is(sampleShop.getBusinessType())),
+                                        org.hamcrest.Matchers.hasProperty("currency", org.hamcrest.Matchers.is(sampleShop.getCurrency())),
+                                        org.hamcrest.Matchers.hasProperty("contact", org.hamcrest.Matchers.is(sampleShop.getContact())),
+                                        org.hamcrest.Matchers.hasProperty("socialMediaLinks", org.hamcrest.Matchers.is(sampleShop.getSocialMediaLinks()))
+                                )
+                        )));
+    }
+
 }
