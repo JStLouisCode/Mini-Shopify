@@ -7,12 +7,12 @@ public class ShopManagementFacade {
     private String name;
     private ArrayList<String> tags;
     private String ShopType;
-    private UserMangementFacade owner;
+    public UserManagementFacade owner;
     private int id;
-    private ProductManagementFacade products;
-    private OrderAndCheckoutFacade orderer;
+    public ProductManagementFacade products;
+    public OrderAndCheckoutFacade orderer;
 
-    public ShopManagementFacade(UserMangementFacade owner, int id) {
+    public ShopManagementFacade(UserManagementFacade owner, int id) {
         this.owner = owner;
         this.id = id;
         products = new ProductManagementFacade(this);
@@ -49,7 +49,7 @@ public class ShopManagementFacade {
     }
 
     //No setters for owner and ID for now for safety reasons
-    public UserMangementFacade getOwner() {
+    public UserManagementFacade getOwner() {
         return owner;
     }
 
