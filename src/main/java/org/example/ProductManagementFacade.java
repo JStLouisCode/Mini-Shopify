@@ -1,20 +1,28 @@
 package org.example;
 
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
-
+@Entity
 public class ProductManagementFacade {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-    public ShopManagementFacade shop;
-    // Initialize the ArrayList here
-    public ArrayList<Product> products = new ArrayList<>();
+    @OneToOne (fetch = FetchType.EAGER)
+    @JoinColumn(name = "shop_id")
+    private ShopManagementFacade shop;
+
+    private ArrayList<Product> products = new ArrayList<>();
+
+    public ProductManagementFacade() {}
 
     public ProductManagementFacade(ShopManagementFacade shop) {
         this.shop = shop;
     }
 
-    public void createProduct (String productName, int productID, String productDescription, double productPrice, String productCategory, int quantity) {
-        // This line will now work correctly
-        products.add(new Product(productName, productID,productDescription,productPrice,productCategory, quantity, shop));
+    public void createProduct (String productName, String productDescription, double productPrice, String productCategory, int quantity) {
+        products.add(new Product(productName,productDescription,productPrice,productCategory, quantity, this));
     }
 
     public ArrayList<Product> getProducts() {

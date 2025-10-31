@@ -1,16 +1,38 @@
 package org.example;
 
+import jakarta.persistence.*;
+
 /// This current implementation isa stub and not the final implementation, it is only here to provide enough
 /// functionality so the shop management features can work.
+@Entity
 public class UserManagementFacade {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "owner_name")
     private String name;
-    public ShopManagementFacade shop;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "shop_id")
+    private ShopManagementFacade shop;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ShopManagementFacade getShop() {
+        return shop;
+    }
 
     public UserManagementFacade() {
-        this.id = 1;
         this.name = "Mr. Owner";
-        this.shop = new ShopManagementFacade(this,0);
+    }
+
+    public void setShop(ShopManagementFacade shop) {
+        this.shop = shop;
     }
     public int getId() { return id;}
     public String getName() {return name;}

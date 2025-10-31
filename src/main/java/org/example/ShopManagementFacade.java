@@ -1,20 +1,35 @@
 package org.example;
 
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
-
+@Entity
 public class ShopManagementFacade {
-
-    private String name;
-    private ArrayList<String> tags;
-    private String ShopType;
-    public UserManagementFacade owner;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    public ProductManagementFacade products;
-    public OrderAndCheckoutFacade orderer;
 
-    public ShopManagementFacade(UserManagementFacade owner, int id) {
+    @Column(name = "shop_name")
+    private String name;
+
+    @ElementCollection
+    @CollectionTable(name = "shop_tags", joinColumns = @JoinColumn(name = "shop_id"))
+    @Column(name = "tag")
+
+    private ArrayList<String> tags = new ArrayList<>();
+    @Column(name = "shop_shopType")
+    private String ShopType;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "owner_id")
+    private UserManagementFacade owner;
+    @OneToOne (fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_manager_id")
+    private ProductManagementFacade products;
+    @Transient
+    private OrderAndCheckoutFacade orderer;
+
+    public ShopManagementFacade(UserManagementFacade owner) {
         this.owner = owner;
-        this.id = id;
         products = new ProductManagementFacade(this);
         orderer = new OrderAndCheckoutFacade(this);
     }
