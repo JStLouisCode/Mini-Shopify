@@ -22,18 +22,18 @@ public class Product {
     private int quantity;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "facade_id")
-    private ProductManagementFacade productFacade;
+    private Shop shop;
 
     public Product() {}
 
-    public Product(String productName, String productDescription, double productPrice, String productCategory, int quantity, ProductManagementFacade productFacade) {
+    public Product(String productName, String productDescription, double productPrice, String productCategory, int quantity, Shop shop) {
 
         this.productName = productName;
         this.productDescription = productDescription;
         this.productPrice = productPrice;
         this.productCategory = productCategory;
         this.quantity = quantity;
-        this.productFacade = productFacade;
+        this.shop = shop;
     }
 
     /// For safety and simplicity there are only setters for desc. and price. Do not worry about others right now
@@ -68,8 +68,8 @@ public class Product {
         return quantity;
     }
 
-    public ProductManagementFacade getShop() {
-        return productFacade;
+    public Shop getShop() {
+        return shop;
     }
 
     public void setQuantityMinus1() {

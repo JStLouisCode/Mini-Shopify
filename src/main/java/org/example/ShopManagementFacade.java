@@ -1,74 +1,72 @@
 package org.example;
 
-import jakarta.persistence.*;
+import org.example.model.Shop; // Import the Shop DATA entity
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-@Entity
+import java.util.List; // Use List interface
+
+@Service
 public class ShopManagementFacade {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
 
-    @Column(name = "shop_name")
-    private String name;
+    @Autowired
+    private ProductManagementFacade productManager;
 
-    @ElementCollection
-    @CollectionTable(name = "shop_tags", joinColumns = @JoinColumn(name = "shop_id"))
-    @Column(name = "tag")
+    @Autowired
+    private UserManagementFacade userManager; // Assuming this is also a @Service
 
-    private ArrayList<String> tags = new ArrayList<>();
-    @Column(name = "shop_shopType")
-    private String ShopType;
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "owner_id")
-    private UserManagementFacade owner;
-    @OneToOne (fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_manager_id")
-    private ProductManagementFacade products;
-    @Transient
+    @Autowired
     private OrderAndCheckoutFacade orderer;
 
-    public ShopManagementFacade(UserManagementFacade owner) {
-        this.owner = owner;
-        products = new ProductManagementFacade(this);
-        orderer = new OrderAndCheckoutFacade(this);
+    // --- 3. ADD THE NO-ARG CONSTRUCTOR ---
+    // This is what Spring needs to create the bean.
+    public ShopManagementFacade() {}
+
+    // --- 4. UPDATE METHODS TO USE A 'Shop' PARAMETER ---
+    // This facade can now manage ANY shop, not just one.
+
+    public String getName(Shop shop) {
+        return shop.getName();
     }
 
-    public String getName() {
-        return name;
+    public void setName(Shop shop, String name) {
+        shop.setName(name);
+        // In a real app, you would save the shop entity here
+        // shopRepository.save(shop);
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public List<String> getTags(Shop shop) { // Use List
+        return shop.getTags();
     }
 
-    public ArrayList<String> getTags() {
-        return tags;
+    public void setTags(Shop shop, ArrayList<String> tags) {
+        shop.setTags(tags);
     }
 
-    public void setTags(ArrayList<String> tags) {
-        this.tags = tags;
+    public String getShopType(Shop shop) {
+        return shop.getBusinessType(); // Assumes 'getBusinessType' exists in Shop.java
     }
 
-    public String getShopType() {
-        return ShopType;
+    public void setShopType(Shop shop, String shopType) {
+        shop.setBusinessType(shopType);
     }
 
-
-    public void setShopType(String shopType) {
-        ShopType = shopType;
+    // These methods now just return the injected services
+    public ProductManagementFacade getProductManager() {
+        return productManager;
     }
 
-    public ProductManagementFacade getProductManager (){
-        return products;
+    public UserManagementFacade getUserManager() {
+        return userManager;
     }
 
-    //No setters for owner and ID for now for safety reasons
-    public UserManagementFacade getOwner() {
-        return owner;
+    public OrderAndCheckoutFacade getOrderer() {
+        return orderer;
     }
 
-    public int getId() {return id;}
-
-
+    // This should also get data *from* the Shop entity
+    public Long getId(Shop shop) { // The ID in Shop.java is Long
+        return shop.getId();
+    }
 }

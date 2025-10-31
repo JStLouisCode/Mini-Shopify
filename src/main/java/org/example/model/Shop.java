@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.example.model.Product;
 
 @Entity
 public class Shop {
@@ -12,14 +13,18 @@ public class Shop {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private String tags;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "shop_tags", joinColumns = @JoinColumn(name = "shop_id"))
+    @Column(name = "tag")
+    private List<String> tags = new ArrayList<>();
     private String description;
     private String businessType;
     private String currency;
     private String contact;
     private String socialMediaLinks;
 
-
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Product> products = new ArrayList<>();
 
 
 
@@ -40,12 +45,16 @@ public class Shop {
         this.name = name;
     }
 
-    public String getTags() {
+    public List<String> getTags() { // Returns List<String>
         return tags;
     }
 
-    public void setTags(String tags) {
+    public void setTags(List<String> tags) { // Accepts List<String>
         this.tags = tags;
+    }
+
+    public List<Product> getProducts() {
+        return this.products;
     }
 
     public String getDescription() {

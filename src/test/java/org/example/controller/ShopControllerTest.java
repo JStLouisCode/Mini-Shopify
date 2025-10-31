@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -38,7 +39,7 @@ class ShopControllerTest {
         sampleShop = new Shop();
         sampleShop.setName("Test Shop");
         sampleShop.setDescription("A test shop for unit testing");
-        sampleShop.setTags("test, sample, shop");
+        sampleShop.setTags(List.of("test, sample, shop"));
         sampleShop.setBusinessType("Retail");
         sampleShop.setCurrency("CAD");
         sampleShop.setContact("123-4567");
@@ -171,7 +172,7 @@ class ShopControllerTest {
         Shop updatedShop = new Shop();
         updatedShop.setName("Updated Shop Name");
         updatedShop.setDescription("Updated description");
-        updatedShop.setTags("updated, tags");
+        updatedShop.setTags(List.of("updated, tags"));
 
         mockMvc.perform(put(location)
                         .contentType(MediaType.APPLICATION_JSON)
