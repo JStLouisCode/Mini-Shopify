@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.model.Product;
+
 public class OrderAndCheckoutFacade {
     private ShopManagementFacade shop;
     private static OrderAndCheckoutFacade instance;

@@ -1,7 +1,6 @@
 package org.example.model;
 
 import jakarta.persistence.*;
-import org.example.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +20,8 @@ public class Shop {
     private String socialMediaLinks;
 
 
-    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Product> products = new ArrayList<>();
+
+
 
     // Getters and Setters
     public Long getId() {

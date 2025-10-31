@@ -1,6 +1,7 @@
 package org.example;
 
 import jakarta.persistence.*;
+import org.example.model.Product;
 
 import java.util.ArrayList;
 @Entity
