@@ -1,9 +1,10 @@
 package org.example.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import org.example.Product;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Shop {
@@ -18,6 +19,10 @@ public class Shop {
     private String currency;
     private String contact;
     private String socialMediaLinks;
+
+
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Product> products = new ArrayList<>();
 
     // Getters and Setters
     public Long getId() {
