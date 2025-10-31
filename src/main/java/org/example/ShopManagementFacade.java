@@ -1,72 +1,59 @@
 package org.example;
 
-import org.example.model.Shop; // Import the Shop DATA entity
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
-import java.util.List; // Use List interface
 
-@Service
 public class ShopManagementFacade {
 
-    @Autowired
-    private ProductManagementFacade productManager;
-
-    @Autowired
-    private UserManagementFacade userManager; // Assuming this is also a @Service
-
-    @Autowired
+    private String name;
+    private ArrayList<String> tags;
+    private String ShopType;
+    private UserMangementFacade owner;
+    private int id;
+    private ProductManagementFacade products;
     private OrderAndCheckoutFacade orderer;
 
-    // --- 3. ADD THE NO-ARG CONSTRUCTOR ---
-    // This is what Spring needs to create the bean.
-    public ShopManagementFacade() {}
-
-    // --- 4. UPDATE METHODS TO USE A 'Shop' PARAMETER ---
-    // This facade can now manage ANY shop, not just one.
-
-    public String getName(Shop shop) {
-        return shop.getName();
+    public ShopManagementFacade(UserMangementFacade owner, int id) {
+        this.owner = owner;
+        this.id = id;
+        products = new ProductManagementFacade(this);
+        orderer = new OrderAndCheckoutFacade(this);
     }
 
-    public void setName(Shop shop, String name) {
-        shop.setName(name);
-        // In a real app, you would save the shop entity here
-        // shopRepository.save(shop);
+    public String getName() {
+        return name;
     }
 
-    public List<String> getTags(Shop shop) { // Use List
-        return shop.getTags();
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setTags(Shop shop, ArrayList<String> tags) {
-        shop.setTags(tags);
+    public ArrayList<String> getTags() {
+        return tags;
     }
 
-    public String getShopType(Shop shop) {
-        return shop.getBusinessType(); // Assumes 'getBusinessType' exists in Shop.java
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
     }
 
-    public void setShopType(Shop shop, String shopType) {
-        shop.setBusinessType(shopType);
+    public String getShopType() {
+        return ShopType;
     }
 
-    // These methods now just return the injected services
-    public ProductManagementFacade getProductManager() {
-        return productManager;
+
+    public void setShopType(String shopType) {
+        ShopType = shopType;
     }
 
-    public UserManagementFacade getUserManager() {
-        return userManager;
+    public ProductManagementFacade getProductManager (){
+        return products;
     }
 
-    public OrderAndCheckoutFacade getOrderer() {
-        return orderer;
+    //No setters for owner and ID for now for safety reasons
+    public UserMangementFacade getOwner() {
+        return owner;
     }
 
-    // This should also get data *from* the Shop entity
-    public Long getId(Shop shop) { // The ID in Shop.java is Long
-        return shop.getId();
-    }
+    public int getId() {return id;}
+
+
 }
