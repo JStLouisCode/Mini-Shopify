@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -259,6 +261,14 @@ class ShopControllerTest {
         mockMvc.perform(post("/shops")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(""))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createShop_InvalidJson_ReturnsBadRequest() throws Exception {
+        mockMvc.perform(post("/shops")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Arrays.toString(new String[]{"invalid json"})))
                 .andExpect(status().isBadRequest());
     }
 
