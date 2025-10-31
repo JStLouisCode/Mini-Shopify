@@ -1,10 +1,4 @@
 package org.example;
-<<<<<<< HEAD
-
-import jakarta.persistence.*;
-
-=======
->>>>>>> parent of 2fdb141 (Merge remote-tracking branch 'origin/main' into jared)
 /// This is a stub only here to support ShopManagementFacade and has not been fully implemented yet.
 public class Product {
     private String productName;
@@ -13,17 +7,7 @@ public class Product {
     private String productCategory;
     private int productID;
     private int quantity;
-<<<<<<< HEAD
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "facade_id")
-    private ProductManagementFacade shop;
-
-    public Product() {}
-
-    public Product(String productName, String productDescription, double productPrice, String productCategory, int quantity, ProductManagementFacade shop) {
-=======
     private ShopManagementFacade shop;
->>>>>>> parent of 2fdb141 (Merge remote-tracking branch 'origin/main' into jared)
 
     public Product(String productName, int productID, String productDescription, double productPrice, String productCategory, int quantity, ShopManagementFacade shop) {
         this.productName = productName;
@@ -48,10 +32,6 @@ public class Product {
         return productPrice;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
     public String getProductCategory() {
         return productCategory;
     }
@@ -71,11 +51,7 @@ public class Product {
         return quantity;
     }
 
-<<<<<<< HEAD
-    public ProductManagementFacade getShop() {
-=======
     public ShopManagementFacade getShop() {
->>>>>>> parent of 2fdb141 (Merge remote-tracking branch 'origin/main' into jared)
         return shop;
     }
 

@@ -5,15 +5,9 @@ import org.example.repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-<<<<<<< HEAD
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-=======
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
->>>>>>> parent of 2fdb141 (Merge remote-tracking branch 'origin/main' into jared)
 
 @Controller
 public class ShopControllor {
@@ -48,9 +42,6 @@ public class ShopControllor {
     public String orders() {
         return "orders";
     }
-<<<<<<< HEAD
-}
-=======
 
     @GetMapping("/shops")
     public String viewShops(Model model) {
@@ -82,4 +73,3 @@ public class ShopControllor {
     }
 
 }
->>>>>>> parent of 2fdb141 (Merge remote-tracking branch 'origin/main' into jared)

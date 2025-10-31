@@ -1,17 +1,9 @@
 package org.example.model;
 
-<<<<<<< HEAD
-import jakarta.persistence.*;
-import org.example.Product;
-
-import java.util.ArrayList;
-import java.util.List;
-=======
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
->>>>>>> parent of 2fdb141 (Merge remote-tracking branch 'origin/main' into jared)
 
 @Entity
 public class Shop {
@@ -27,13 +19,6 @@ public class Shop {
     private String contact;
     private String socialMediaLinks;
 
-<<<<<<< HEAD
-
-    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Product> products = new ArrayList<>();
-
-=======
->>>>>>> parent of 2fdb141 (Merge remote-tracking branch 'origin/main' into jared)
     // Getters and Setters
     public Long getId() {
         return id;
