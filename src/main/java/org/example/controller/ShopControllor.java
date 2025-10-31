@@ -5,15 +5,9 @@ import org.example.repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-<<<<<<< HEAD
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-=======
-import org.springframework.web.bind.annotation.*;
-import java.util.Optional;
-
->>>>>>> parent of 2fdb141 (Merge remote-tracking branch 'origin/main' into jared)
 
 @Controller
 public class ShopControllor {
@@ -48,38 +42,4 @@ public class ShopControllor {
     public String orders() {
         return "orders";
     }
-<<<<<<< HEAD
 }
-=======
-
-    @GetMapping("/shops")
-    public String viewShops(Model model) {
-        model.addAttribute("shops", shopRepository.findAll());
-        return "view-shops";
-    }
-
-    @GetMapping("/select-shop")
-    public String selectShop(Model model) {
-        model.addAttribute("shops", shopRepository.findAll());
-        return "select-shop";
-    }
-
-    @GetMapping("/edit-shop/{id}")
-    public String editShopForm(@PathVariable Long id, Model model) {
-        Optional<Shop> shop = shopRepository.findById(id);
-        if (shop.isPresent()) {
-            model.addAttribute("shop", shop.get());
-            return "edit-shop";
-        }
-        return "redirect:/select-shop";
-    }
-
-    @PostMapping("/edit-shop/{id}")
-    public String updateShop(@PathVariable Long id, @ModelAttribute Shop shop) {
-        shop.setId(id);
-        shopRepository.save(shop);
-        return "redirect:/select-shop";
-    }
-
-}
->>>>>>> parent of 2fdb141 (Merge remote-tracking branch 'origin/main' into jared)

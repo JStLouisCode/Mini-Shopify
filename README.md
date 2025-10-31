@@ -1,5 +1,4 @@
 # Mini-Shopify
-<<<<<<< HEAD
 
 **Repository:** `https://github.com/JStLouisCode/Mini-Shopify`
 
@@ -136,6 +135,3 @@ This diagram shows the sequence of events when a merchant creates a new shop.
 This diagram shows the sequence of events when a merchant creates a new product.
 
 ![UML Sequence Diagram](PostProductSequence.png)
-=======
-SYSC4806 Project
->>>>>>> parent of 2fdb141 (Merge remote-tracking branch 'origin/main' into jared)

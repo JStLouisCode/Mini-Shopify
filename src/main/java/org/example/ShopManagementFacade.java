@@ -1,20 +1,14 @@
 package org.example;
 
-<<<<<<< HEAD
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 @Entity
-=======
-import java.util.ArrayList;
-
->>>>>>> parent of 2fdb141 (Merge remote-tracking branch 'origin/main' into jared)
 public class ShopManagementFacade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-<<<<<<< HEAD
     @Column(name = "shop_name")
     private String name;
 
@@ -36,19 +30,6 @@ public class ShopManagementFacade {
 
     public ShopManagementFacade(UserManagementFacade owner) {
         this.owner = owner;
-=======
-    private String name;
-    private ArrayList<String> tags;
-    private String ShopType;
-    private UserMangementFacade owner;
-    private int id;
-    private ProductManagementFacade products;
-    private OrderAndCheckoutFacade orderer;
-
-    public ShopManagementFacade(UserMangementFacade owner, int id) {
-        this.owner = owner;
-        this.id = id;
->>>>>>> parent of 2fdb141 (Merge remote-tracking branch 'origin/main' into jared)
         products = new ProductManagementFacade(this);
         orderer = new OrderAndCheckoutFacade(this);
     }
@@ -83,11 +64,7 @@ public class ShopManagementFacade {
     }
 
     //No setters for owner and ID for now for safety reasons
-<<<<<<< HEAD
     public UserManagementFacade getOwner() {
-=======
-    public UserMangementFacade getOwner() {
->>>>>>> parent of 2fdb141 (Merge remote-tracking branch 'origin/main' into jared)
         return owner;
     }
 
