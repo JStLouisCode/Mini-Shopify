@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create a New Shop</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Create a New Shop</h1>
+    </div>
+    <form action="#" th:action="@{/create-shop}" th:object="${shop}" method="post">
+        <div class="form-group">
+            <label for="name">Shop Name</label>
+            <input type="text" id="name" th:field="*{name}" required>
+        </div>
+        <div class="form-group">
+            <label for="tags">Tags</label>
+            <input type="text" id="tags" th:field="*{tags}" placeholder="e.g., electronics, books, clothes">
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" id="description" th:field="*{description}" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="businessType">Business Type</label>
+            <input type="text" id="businessType" th:field="*{businessType}" placeholder="e.g., retail, government">
+        </div>
+        <div class="form-group">
+            <label for="currency">Currency</label>
+            <input type="text" id="currency" th:field="*{currency}" placeholder="e.g., USD, CAD">
+        </div>
+        <div class="form-group">
+            <label for="contact">Contact</label>
+            <input type="text" id="contact" th:field="*{contact}" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="socialMediaLinks">Social Media Links</label>
+            <input type="text" id="socialMediaLinks" th:field="*{socialMediaLinks}" placeholder="e.g., Instagram, X">
+        </div>
+        <button type="submit" class="btn">Create Shop</button>
+    </form>
+</div>
+</body>
+</html>
