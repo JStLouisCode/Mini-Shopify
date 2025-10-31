@@ -22,6 +22,7 @@ public class Product {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "facade_id")
     private ProductManagementFacade shop;
+
     public Product() {}
 
     public Product(String productName, String productDescription, double productPrice, String productCategory, int quantity, ProductManagementFacade shop) {
