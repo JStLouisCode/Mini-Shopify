@@ -1,6 +1,7 @@
-package org.example;
+package org.example.model;
 
 import jakarta.persistence.*;
+import org.example.ProductManagementFacade;
 
 /// This is a stub only here to support ShopManagementFacade and has not been fully implemented yet.
 @Entity
@@ -21,11 +22,11 @@ public class Product {
     private int quantity;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "facade_id")
-    private ProductManagementFacade shop;
+    private Shop shop;
 
     public Product() {}
 
-    public Product(String productName, String productDescription, double productPrice, String productCategory, int quantity, ProductManagementFacade shop) {
+    public Product(String productName, String productDescription, double productPrice, String productCategory, int quantity, Shop shop) {
 
         this.productName = productName;
         this.productDescription = productDescription;
@@ -71,7 +72,7 @@ public class Product {
         return quantity;
     }
 
-    public ProductManagementFacade getShop() {
+    public Shop getShop() {
         return shop;
     }
 
