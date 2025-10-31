@@ -1,34 +1,17 @@
-package org.example.model;
-
-import jakarta.persistence.*;
-import org.example.ProductManagementFacade;
-
+package org.example;
 /// This is a stub only here to support ShopManagementFacade and has not been fully implemented yet.
-@Entity
 public class Product {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int productID;
-    @Column(name = "product_name")
     private String productName;
-    @Column(name = "product_desc")
     private String productDescription;
-    @Column(name = "product_cost")
     private double productPrice;
-    @Column(name = "product_category")
     private String productCategory;
-    @Column(name = "product_quantity")
+    private int productID;
     private int quantity;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "facade_id")
-    private Shop shop;
+    private ShopManagementFacade shop;
 
-    public Product() {}
-
-    public Product(String productName, String productDescription, double productPrice, String productCategory, int quantity, Shop shop) {
-
+    public Product(String productName, int productID, String productDescription, double productPrice, String productCategory, int quantity, ShopManagementFacade shop) {
         this.productName = productName;
+        this.productID = productID;
         this.productDescription = productDescription;
         this.productPrice = productPrice;
         this.productCategory = productCategory;
@@ -72,7 +55,7 @@ public class Product {
         return quantity;
     }
 
-    public Shop getShop() {
+    public ShopManagementFacade getShop() {
         return shop;
     }
 
