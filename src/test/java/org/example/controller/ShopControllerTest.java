@@ -39,7 +39,7 @@ class ShopControllerTest {
         sampleShop = new Shop();
         sampleShop.setName("Test Shop");
         sampleShop.setDescription("A test shop for unit testing");
-        sampleShop.setTags(List.of("test, sample, shop"));
+        sampleShop.setTags(Arrays.asList("test", "sample", "shop"));
         sampleShop.setBusinessType("Retail");
         sampleShop.setCurrency("CAD");
         sampleShop.setContact("123-4567");
@@ -172,7 +172,7 @@ class ShopControllerTest {
         Shop updatedShop = new Shop();
         updatedShop.setName("Updated Shop Name");
         updatedShop.setDescription("Updated description");
-        updatedShop.setTags(List.of("updated, tags"));
+        updatedShop.setTags(Arrays.asList("updated", "tags"));
 
         mockMvc.perform(put(location)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -369,7 +369,7 @@ class ShopControllerTest {
                                 org.hamcrest.Matchers.allOf(
                                         org.hamcrest.Matchers.hasProperty("name", org.hamcrest.Matchers.is(sampleShop.getName())),
                                         org.hamcrest.Matchers.hasProperty("description", org.hamcrest.Matchers.is(sampleShop.getDescription())),
-                                        org.hamcrest.Matchers.hasProperty("tags", org.hamcrest.Matchers.is(sampleShop.getTags())),
+                                        org.hamcrest.Matchers.hasProperty("tags", org.hamcrest.Matchers.contains("test", "sample", "shop")),
                                         org.hamcrest.Matchers.hasProperty("businessType", org.hamcrest.Matchers.is(sampleShop.getBusinessType())),
                                         org.hamcrest.Matchers.hasProperty("currency", org.hamcrest.Matchers.is(sampleShop.getCurrency())),
                                         org.hamcrest.Matchers.hasProperty("contact", org.hamcrest.Matchers.is(sampleShop.getContact())),
