@@ -48,6 +48,10 @@ public class Product {
         return productPrice;
     }
 
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
     public String getProductCategory() {
         return productCategory;
     }

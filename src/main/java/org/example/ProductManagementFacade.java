@@ -25,6 +25,10 @@ public class ProductManagementFacade {
         products.add(new Product(productName,productDescription,productPrice,productCategory, quantity, this));
     }
 
+    public void createProductViaObject (Product product) {
+        products.add(product);
+    }
+
     public ArrayList<Product> getProducts() {
         return products;
     }
