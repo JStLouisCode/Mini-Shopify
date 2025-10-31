@@ -12,9 +12,9 @@ public class ProductManagementFacade {
         this.shop = shop;
     }
 
-    public void createProduct (String productName, int productID, String productDescription, double productPrice, String productCategory, int quantity) {
+    public void createProduct (String productName, String productDescription, double productPrice, String productCategory, int quantity) {
         // This line will now work correctly
-        products.add(new Product(productName, productID,productDescription,productPrice,productCategory, quantity, shop));
+        products.add(new Product(productName,productDescription,productPrice,productCategory, quantity, this));
     }
 
     public ArrayList<Product> getProducts() {
