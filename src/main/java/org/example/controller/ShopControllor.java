@@ -42,4 +42,10 @@ public class ShopControllor {
     public String orders() {
         return "orders";
     }
+
+    @GetMapping("/view-existing-shops")
+    public String ViewExistingShops(Model model) {
+        model.addAttribute("shops", shopRepository.findAll());
+        return "view-existing-shops";
+    }
 }
