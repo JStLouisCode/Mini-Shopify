@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Shop</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Edit Shop</h1>
+        <p>Update your shop's information</p>
+    </div>
+    <form th:action="@{/edit-shop/{id}(id=${shop.id})}" th:object="${shop}" method="post">
+        <div class="form-group">
+            <label for="name">Shop Name *</label>
+            <input type="text" id="name" th:field="*{name}" required/>
+        </div>
+        <div class="form-group">
+            <label for="tags">Tags</label>
+            <input type="text" id="tags" name="tags" th:value="${shop.tags != null ? #strings.listJoin(shop.tags, ', ') : ''}" placeholder="e.g., electronics, books, clothes"/>
+            <small>Separate multiple tags with commas</small>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" th:field="*{description}" rows="4" placeholder="Describe your shop..."></textarea>
+        </div>
+        <div class="form-group">
+            <label for="businessType">Business Type</label>
+            <input type="text" id="businessType" th:field="*{businessType}" placeholder="e.g., retail, wholesale, services"/>
+        </div>
+        <div class="form-group">
+            <label for="currency">Currency</label>
+            <select id="currency" th:field="*{currency}">
+                <option value="">Select Currency</option>
+                <option value="USD">USD - US Dollar</option>
+                <option value="CAD">CAD - Canadian Dollar</option>
+                <option value="EUR">EUR - Euro</option>
+                <option value="GBP">GBP - British Pound</option>
+                <option value="JPY">JPY - Japanese Yen</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="contact">Contact Email</label>
+            <input type="email" id="contact" th:field="*{contact}" placeholder="contact@example.com"/>
+        </div>
+        <div class="form-group">
+            <label for="socialMediaLinks">Social Media Links</label>
+            <input type="text" id="socialMediaLinks" th:field="*{socialMediaLinks}" placeholder="e.g., @yourshop, facebook.com/yourshop"/>
+        </div>
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a th:href="@{/select-shop}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
