@@ -72,14 +72,13 @@ public class ShopControllor {
         model.addAttribute("shops", shopRepository.findAll());
         return "view-existing-shops";
     }
-
+    
     @GetMapping("/select-shop")
     public String selectShop(Model model) {
         model.addAttribute("shops", shopRepository.findAll());
         return "select-shop";
     }
 
-    // NEW: Show edit form
     @GetMapping("/edit-shop/{id}")
     public String editShopForm(@PathVariable Long id, Model model) {
         Optional<Shop> shop = shopRepository.findById(id);
@@ -90,7 +89,6 @@ public class ShopControllor {
         return "redirect:/select-shop";
     }
 
-    // NEW: Update shop
     @PostMapping("/edit-shop/{id}")
     public String updateShop(@PathVariable Long id, @ModelAttribute Shop shop, @RequestParam("tags") String tagsString) {
         if (tagsString != null && !tagsString.isEmpty()) {
