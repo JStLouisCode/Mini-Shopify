@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -71,4 +72,35 @@ public class ShopControllor {
         model.addAttribute("shops", shopRepository.findAll());
         return "view-existing-shops";
     }
+    
+    @GetMapping("/select-shop")
+    public String selectShop(Model model) {
+        model.addAttribute("shops", shopRepository.findAll());
+        return "select-shop";
+    }
+
+    @GetMapping("/edit-shop/{id}")
+    public String editShopForm(@PathVariable Long id, Model model) {
+        Optional<Shop> shop = shopRepository.findById(id);
+        if (shop.isPresent()) {
+            model.addAttribute("shop", shop.get());
+            return "edit-shop";
+        }
+        return "redirect:/select-shop";
+    }
+
+    @PostMapping("/edit-shop/{id}")
+    public String updateShop(@PathVariable Long id, @ModelAttribute Shop shop, @RequestParam("tags") String tagsString) {
+        if (tagsString != null && !tagsString.isEmpty()) {
+            List<String> tagsList = Arrays.stream(tagsString.split(","))
+                    .map(String::trim)
+                    .filter(tag -> !tag.isEmpty())
+                    .collect(Collectors.toList());
+            shop.setTags(tagsList);
+        }
+        shop.setId(id);
+        shopRepository.save(shop);
+        return "redirect:/select-shop";
+    }
+
 }
