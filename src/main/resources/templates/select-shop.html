@@ -23,7 +23,7 @@
             <div class="shop-info">
                 <h2 th:text="${shop.name}">Shop Name</h2>
                 <div class="shop-meta">
-                    <span class="badge" th:if="${shop.tags}" th:text="${shop.tags}">Tags</span>
+                    <span class="badge" th:if="${shop.tags != null and !shop.tags.isEmpty()}" th:text="${#strings.listJoin(shop.tags, ', ')}">Tags</span>
                     <span class="shop-type" th:if="${shop.businessType}" th:text="${shop.businessType}">Business Type</span>
                 </div>
                 <p class="shop-description" th:text="${shop.description} ?: 'No description available'">Description</p>
@@ -40,3 +40,5 @@
 </div>
 </body>
 </html>
+
+<!-- test -->
