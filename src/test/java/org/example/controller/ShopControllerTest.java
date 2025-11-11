@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -330,6 +330,65 @@ class ShopControllerTest {
     }
 
     /**
+     * Tests the web controller /create-shop endpoint with form data.
+     */
+    @Test
+    void createShop_WithFormPost_ReturnsRedirect() throws Exception {
+        mockMvc.perform(post("/create-shop")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("name", "New Form Shop")
+                        .param("description", "A shop from a form")
+                        .param("currency", "USD")
+                        .param("tags", "Electronics", "Toys")
+                )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
+
+        // Verify the shop was saved correctly
+        Optional<Shop> savedShopOpt = shopRepository.findByName("New Form Shop");
+        assertTrue(savedShopOpt.isPresent(), "Shop 'New Form Shop' was not saved.");
+        Shop savedShop = savedShopOpt.get();
+
+        assertNotNull(savedShop);
+        assertEquals("USD", savedShop.getCurrency());
+        assertEquals(2, savedShop.getTags().size());
+        assertTrue(savedShop.getTags().contains("Electronics"));
+    }
+
+    /**
+     * Tests the web controller /edit-shop endpoint with form data.
+     */
+    @Test
+    void updateShop_WithFormPost_UpdatesShop() throws Exception {
+        // 1. Create a shop to edit
+        Shop shop = new Shop();
+        shop.setName("Shop to Edit");
+        shop.setCurrency("CAD");
+        shop.setTags(List.of("Books"));
+        shop = shopRepository.save(shop);
+        Long shopId = shop.getId();
+
+        // 2. Perform the edit post
+        mockMvc.perform(post("/edit-shop/" + shopId)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("name", "Shop Was Edited")
+                        .param("description", "Updated description")
+                        .param("currency", "EUR")
+                        .param("tags", "Sports")
+                )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/select-shop"));
+
+        // 3. Verify the changes
+        Shop updatedShop = shopRepository.findById(shopId).get();
+        assertEquals("Shop Was Edited", updatedShop.getName());
+        assertEquals("Updated description", updatedShop.getDescription());
+        assertEquals("EUR", updatedShop.getCurrency());
+        assertEquals(1, updatedShop.getTags().size());
+        assertTrue(updatedShop.getTags().contains("Sports"));
+    }
+
+    /**
      * Tests creating shop with invalid JSON returns 400 Bad Request status.
      */
     @Test
@@ -358,17 +417,18 @@ class ShopControllerTest {
      */
     @Test
     void viewExistingShops_ReturnsCorrectViewName() throws Exception {
-        mockMvc.perform(get("/view-existing-shops"))
+        mockMvc.perform(get("/")) // <-- CHANGED
                 .andExpect(status().isOk())
-                .andExpect(view().name("view-existing-shops"));
+                .andExpect(view().name("homepage")); // <-- CHANGED
     }
+
 
     /**
      * Tests view existing shops page adds shops to model.
      */
     @Test
     void viewExistingShops_AddsShopsToModel() throws Exception {
-        mockMvc.perform(get("/view-existing-shops"))
+        mockMvc.perform(get("/")) // <-- CHANGED
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("shops"));
     }
@@ -378,7 +438,8 @@ class ShopControllerTest {
      */
     @Test
     void viewExistingShops_EmptyDatabase_ReturnsEmptyList() throws Exception {
-        mockMvc.perform(get("/view-existing-shops"))
+        // setUp() already cleared the DB
+        mockMvc.perform(get("/")) // <-- CHANGED
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("shops"))
                 .andExpect(model().attribute("shops", org.hamcrest.Matchers.empty()));
@@ -389,17 +450,22 @@ class ShopControllerTest {
      */
     @Test
     void viewExistingShops_WithExistingShops_ShopsListInModel() throws Exception {
-        mockMvc.perform(post("/shops")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(sampleShop)))
-                .andExpect(status().isCreated());
+        // === CORRECTED SETUP ===
+        // Create a shop using the WEB FORM ENDPOINT
+        mockMvc.perform(post("/create-shop")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("name", "Test Shop for View")
+                        .param("currency", "CAD")
+                        .param("tags", "test", "sample")
+                )
+                .andExpect(status().is3xxRedirection());
 
         // Verify shop appears in view
-        mockMvc.perform(get("/view-existing-shops"))
+        mockMvc.perform(get("/")) // <-- CHANGED
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("shops"))
                 .andExpect(model().attribute("shops", org.hamcrest.Matchers.not(org.hamcrest.Matchers.empty())))
-                .andExpect(model().attribute("shops", org.hamcrest.Matchers.hasSize(org.hamcrest.Matchers.greaterThanOrEqualTo(1))));
+                .andExpect(model().attribute("shops", org.hamcrest.Matchers.hasSize(1)));
     }
 
     /**
@@ -407,25 +473,24 @@ class ShopControllerTest {
      */
     @Test
     void viewExistingShops_WithMultipleShops_AllShopsInModel() throws Exception {
-        // Create multiple shops
-        mockMvc.perform(post("/shops")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(sampleShop)))
-                .andExpect(status().isCreated());
-        mockMvc.perform(post("/shops")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(sampleShop)))
-                .andExpect(status().isCreated());
-        mockMvc.perform(post("/shops")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(sampleShop)))
-                .andExpect(status().isCreated());
+        // === CORRECTED SETUP ===
+        // Create multiple shops using the web form
+        mockMvc.perform(post("/create-shop")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("name", "Shop 1")
+                        .param("currency", "CAD"))
+                .andExpect(status().is3xxRedirection());
+        mockMvc.perform(post("/create-shop")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("name", "Shop 2")
+                        .param("currency", "USD"))
+                .andExpect(status().is3xxRedirection());
 
         // Verify all shops are returned
-        mockMvc.perform(get("/view-existing-shops"))
+        mockMvc.perform(get("/")) // <-- CHANGED
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("shops"))
-                .andExpect(model().attribute("shops", org.hamcrest.Matchers.hasSize(org.hamcrest.Matchers.greaterThanOrEqualTo(3))));
+                .andExpect(model().attribute("shops", org.hamcrest.Matchers.hasSize(2)));
     }
 
     /**
@@ -433,25 +498,34 @@ class ShopControllerTest {
      */
     @Test
     void viewExistingShops_VerifyShopDetails_AllFieldsPresent() throws Exception {
-        mockMvc.perform(post("/shops")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(sampleShop)))
-                .andExpect(status().isCreated());
+        // === CORRECTED SETUP ===
+        // Create a shop with all details via the web form
+        mockMvc.perform(post("/create-shop")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("name", "Full Detail Shop")
+                        .param("description", "Full description")
+                        .param("tags", "test", "shop")
+                        .param("businessType", "Retail")
+                        .param("currency", "GBP")
+                        .param("contact", "contact@shop.com")
+                        .param("socialMediaLinks", "@shop")
+                )
+                .andExpect(status().is3xxRedirection());
 
         // Verify the shop appears with all its details
-        mockMvc.perform(get("/view-existing-shops"))
+        mockMvc.perform(get("/")) // <-- CHANGED
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("shops"))
                 .andExpect(model().attribute("shops",
                         org.hamcrest.Matchers.hasItem(
                                 org.hamcrest.Matchers.allOf(
-                                        org.hamcrest.Matchers.hasProperty("name", org.hamcrest.Matchers.is(sampleShop.getName())),
-                                        org.hamcrest.Matchers.hasProperty("description", org.hamcrest.Matchers.is(sampleShop.getDescription())),
-                                        org.hamcrest.Matchers.hasProperty("tags", org.hamcrest.Matchers.contains("test", "sample", "shop")),
-                                        org.hamcrest.Matchers.hasProperty("businessType", org.hamcrest.Matchers.is(sampleShop.getBusinessType())),
-                                        org.hamcrest.Matchers.hasProperty("currency", org.hamcrest.Matchers.is(sampleShop.getCurrency())),
-                                        org.hamcrest.Matchers.hasProperty("contact", org.hamcrest.Matchers.is(sampleShop.getContact())),
-                                        org.hamcrest.Matchers.hasProperty("socialMediaLinks", org.hamcrest.Matchers.is(sampleShop.getSocialMediaLinks()))
+                                        org.hamcrest.Matchers.hasProperty("name", org.hamcrest.Matchers.is("Full Detail Shop")),
+                                        org.hamcrest.Matchers.hasProperty("description", org.hamcrest.Matchers.is("Full description")),
+                                        org.hamcrest.Matchers.hasProperty("tags", org.hamcrest.Matchers.contains("test", "shop")),
+                                        org.hamcrest.Matchers.hasProperty("businessType", org.hamcrest.Matchers.is("Retail")),
+                                        org.hamcrest.Matchers.hasProperty("currency", org.hamcrest.Matchers.is("GBP")),
+                                        org.hamcrest.Matchers.hasProperty("contact", org.hamcrest.Matchers.is("contact@shop.com")),
+                                        org.hamcrest.Matchers.hasProperty("socialMediaLinks", org.hamcrest.Matchers.is("@shop"))
                                 )
                         )));
     }
