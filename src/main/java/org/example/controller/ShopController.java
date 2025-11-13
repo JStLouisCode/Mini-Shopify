@@ -125,13 +125,5 @@ public class ShopController {
         shopRepository.save(shop);
         return "redirect:/select-shop";
     }
-
-    @GetMapping("/view-existing-shops")
-    public String viewExistingShops(Model model) {
-        // This line gets all shops from the database
-        model.addAttribute("shops", shopRepository.findAll());
-
-        // This tells Spring to use your "view-existing-shops.html" file
-        return "view-existing-shops";
-    }
+    
 }
