@@ -1,6 +1,10 @@
 package org.example.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +21,9 @@ public class Shop {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long shopId; // Primary key, automatically generated
 
+    @NotBlank(message = "Shop name cannot be empty")
+    @Size(max = 100, message = "Shop name cannot exceed 100 characters")
+    @Pattern(regexp = "^[a-zA-Z0-9\\s-]+$", message = "Shop name can only contain letters, numbers, spaces, and hyphens")
     private String name; // Name of the shop
 
     @ElementCollection(fetch = FetchType.EAGER)

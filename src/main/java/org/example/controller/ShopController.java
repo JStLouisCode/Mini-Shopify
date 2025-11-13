@@ -1,12 +1,16 @@
 package org.example.controller;
 
+import jakarta.validation.Valid;
 import org.example.model.Shop;
 import org.example.repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*; // Make sure this is imported
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -125,5 +129,67 @@ public class ShopController {
         shopRepository.save(shop);
         return "redirect:/select-shop";
     }
-    
+
+    // ========== REST API ENDPOINTS (for tests) ==========
+
+    /**
+     * REST API endpoint to create a shop.
+     * Returns JSON with HTTP status codes.
+     */
+    @PostMapping("/shops")
+    @ResponseBody
+    public ResponseEntity<Shop> createShopApi(@Valid @RequestBody Shop shop) {
+        Shop savedShop = shopRepository.save(shop);
+        URI location = URI.create("/shops/" + savedShop.getShopId());
+        return ResponseEntity.created(location).body(savedShop);
+    }
+
+    /**
+     * REST API endpoint to get all shops.
+     */
+    @GetMapping("/shops")
+    @ResponseBody
+    public ResponseEntity<List<Shop>> getAllShopsApi() {
+        List<Shop> shops = shopRepository.findAll();
+        return ResponseEntity.ok(shops);
+    }
+
+    /**
+     * REST API endpoint to get a shop by ID.
+     */
+    @GetMapping("/shops/{id}")
+    @ResponseBody
+    public ResponseEntity<Shop> getShopByIdApi(@PathVariable Long id) {
+        Optional<Shop> shop = shopRepository.findById(id);
+        return shop.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * REST API endpoint to update a shop.
+     */
+    @PutMapping("/shops/{id}")
+    @ResponseBody
+    public ResponseEntity<Void> updateShopApi(@PathVariable Long id, @Valid @RequestBody Shop shop) {
+        if (!shopRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        shop.setId(id);
+        shopRepository.save(shop);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * REST API endpoint to delete a shop.
+     */
+    @DeleteMapping("/shops/{id}")
+    @ResponseBody
+    public ResponseEntity<Void> deleteShopApi(@PathVariable Long id) {
+        if (!shopRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        shopRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
