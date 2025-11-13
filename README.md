@@ -32,7 +32,7 @@ We have successfully completed **Milestone 1**. Our current functionality focuse
 ### Completed Features
 * **Shop Creation:** Merchants can create a new shop by filling out a form with the shop's name, tags, description, and other details.
 * **View All Shops:** A central page exists to view all shops currently in the system.
-* **Shop Customization:** Merchants have the ability to edit and update the details of their existing shops.
+* **Shop Customization:** Merchants can and will have the ability to edit and update the details of their existing shops.
 
 ### Project Backlog
 Our full project backlog, user stories, and task breakdown are managed on our GitHub Projects Kanban board.
