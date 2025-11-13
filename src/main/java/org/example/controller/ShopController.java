@@ -52,8 +52,24 @@ public class ShopController {
         return "redirect:/";
     }
 
-    // --- ADDED BACK ---
-    // You need this for the "Cancel" button and redirects to work
+    /**
+     * Displays the products page.
+     * @return the products view name
+     */
+    @GetMapping("/products")
+    public String products() {
+        return "products";
+    }
+
+    /**
+     * Displays the orders page.
+     * @return the orders view name
+     */
+    @GetMapping("/orders")
+    public String orders() {
+        return "orders";
+    }
+
     @GetMapping("/select-shop")
     public String selectShop(Model model) {
         model.addAttribute("shops", shopRepository.findAll());
