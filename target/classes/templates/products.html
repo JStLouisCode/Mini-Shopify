@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${shop.name} + ' — Products'">Shop Products</title>
+
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; }
+        .shop-header { margin-bottom: 20px; }
+        .tag {
+            display: inline-block;
+            background: #e0e0e0;
+            padding: 5px 10px;
+            border-radius: 6px;
+            margin-right: 5px;
+        }
+        .product-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+        }
+        .product-title { font-size: 20px; font-weight: bold; }
+        .empty-msg { font-size: 18px; opacity: 0.6; }
+    </style>
+</head>
+
+<body>
+
+<!-- Header for the shop -->
+<div class="shop-header">
+    <h1 th:text="${shop.name}">Shop Name</h1>
+
+    <p th:text="${shop.description}">Shop description goes here...</p>
+
+    <!-- TAGS -->
+    <div th:if="${shop.tags != null}">
+        <span th:each="tag : ${shop.tags}" class="tag" th:text="${tag}"></span>
+    </div>
+</div>
+
+<hr/>
+
+<h2>Products</h2>
+
+<!-- This here is the case without products in it -->
+<p class="empty-msg" th:if="${#lists.isEmpty(shop.products)}">
+    This shop has no products yet.
+</p>
+
+<!-- This here lists the products -->
+<div th:each="p : ${shop.products}" class="product-card">
+
+    <div class="product-title" th:text="${p.productName}">Product Name</div>
+
+    <p><strong>Description:</strong>
+        <span th:text="${p.productDescription}">Description here</span>
+    </p>
+
+    <p><strong>Category:</strong>
+        <span th:text="${p.productCategory}">Category here</span>
+    </p>
+
+    <p><strong>Price:</strong>
+        <span th:text="${p.productPrice}"></span>
+        <span th:text="${shop.currency}">CAD</span>
+    </p>
+
+    <p><strong>Quantity Available:</strong>
+        <span th:text="${p.quantity}">0</span>
+    </p>
+
+</div>
+
+</body>
+</html>

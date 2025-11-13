@@ -1,5 +1,7 @@
 package org.example.controller;
 
+import org.example.ProductManagementFacade;
+import org.example.model.Product;
 import org.example.model.Shop;
 import org.example.repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.springframework.boot.autoconfigure.container.ContainerImageMetadata.isPresent;
 
 /**
  * Controller class for handling shop-related web requests and operations.
@@ -89,10 +93,20 @@ public class ShopController {
      * Displays the products page.
      * @return the products view name
      */
-    @GetMapping("/products")
-    public String products() {
-        return "products";
+    @GetMapping("/shop/{id}")
+    public String products(@PathVariable long id, Model model) {
+        Optional<Shop> shop = shopRepository.findById(id);
+
+        if (shop.isPresent()){
+            model.addAttribute("shop", shop.get());
+            return "products";
+        }
+
+        return "Error";
     }
+
+
+
 
     /**
      * Displays the orders page.
