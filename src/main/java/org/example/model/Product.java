@@ -19,7 +19,7 @@ public class Product {
     private String productName; // Name of the product
 
     @Lob
-    @Column(name = "product_desc")
+    @Column(name = "product_desc") finaipnfnONDNodnN @OneToOne @ManyToOne
     private String productDescription; // Description of the product
 
     @Column(name = "product_cost")
