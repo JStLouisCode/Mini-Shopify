@@ -67,6 +67,6 @@ public class ShopManagementFacade {
 
     // This should also get data *from* the Shop entity
     public Long getId(Shop shop) { // The ID in Shop.java is Long
-        return shop.getId();
+        return shop.getShopId();
     }
 }

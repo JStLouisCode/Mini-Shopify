@@ -69,64 +69,57 @@ class ShopControllerTest {
     }
 
     /**
-     * Tests creating a shop with empty name returns 201 Created status.
+     * Tests creating a shop with empty name returns 400 Bad Request status.
      */
     @Test
-    void createShop_EmptyName_ReturnsCreated() throws Exception {
+    void createShop_EmptyName_ReturnsBadRequest() throws Exception {
         Shop shopWithEmptyName = new Shop();
         shopWithEmptyName.setName("");
 
         mockMvc.perform(post("/shops")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(shopWithEmptyName)))
-                .andExpect(status().isCreated())
-                .andExpect(header().exists("Location"));
+                .andExpect(status().isBadRequest());  // ONLY expect 400
     }
 
-    /**
-     * Tests creating a shop with very long name returns 201 Created status.
-     */
     @Test
-    void createShop_LongName_ReturnsCreated() throws Exception {
+    void createShop_LongName_ReturnsBadRequest() throws Exception {
         Shop shopWithLongName = new Shop();
         shopWithLongName.setName("A".repeat(200)); // Very long name
 
         mockMvc.perform(post("/shops")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(shopWithLongName)))
-                .andExpect(status().isCreated())
-                .andExpect(header().exists("Location"));
+                .andExpect(status().isBadRequest());  // ONLY expect 400
     }
 
     /**
      * Tests creating a shop with special characters in name returns 201 Created status.
      */
     @Test
-    void createShop_SpecialCharactersInName_ReturnsCreated() throws Exception {
+    void createShop_SpecialCharactersInName_ReturnsBadRequest() throws Exception {
         Shop shopWithSpecialChars = new Shop();
         shopWithSpecialChars.setName("Test Shop @#$%^&*()");
 
         mockMvc.perform(post("/shops")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(shopWithSpecialChars)))
-                .andExpect(status().isCreated())
-                .andExpect(header().exists("Location"));
+                .andExpect(status().isBadRequest());  // ONLY expect 400
     }
 
     /**
-     * Tests creating a shop with null fields returns 201 Created status.
+     * Tests creating a shop with null fields returns 400 Created status.
      */
     @Test
-    void createShop_NullFields_ReturnsCreated() throws Exception {
+    void createShop_NullFields_ReturnsBadRequest() throws Exception {
         Shop shopWithNullFields = new Shop();
-        shopWithNullFields.setName("Minimal Shop");
-        // Leave other fields null
+        // name is null - this should fail validation
+        shopWithNullFields.setDescription("Some description");
 
         mockMvc.perform(post("/shops")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(shopWithNullFields)))
-                .andExpect(status().isCreated())
-                .andExpect(header().exists("Location"));
+                .andExpect(status().isBadRequest());  // ONLY expect 400
     }
 
     // ===== READ TESTS =====
@@ -149,8 +142,8 @@ class ShopControllerTest {
         MvcResult createResult = mockMvc.perform(post("/shops")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(sampleShop)))
-                .andExpect(status().isCreated())
-                .andReturn();
+                        .andExpect(status().isCreated())
+                        .andReturn();
 
         String location = createResult.getResponse().getHeader("Location");
         assertNotNull(location);
@@ -366,7 +359,7 @@ class ShopControllerTest {
         shop.setCurrency("CAD");
         shop.setTags(List.of("Books"));
         shop = shopRepository.save(shop);
-        Long shopId = shop.getId();
+        Long shopId = shop.getShopId();
 
         // 2. Perform the edit post
         mockMvc.perform(post("/edit-shop/" + shopId)

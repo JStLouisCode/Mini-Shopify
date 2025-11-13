@@ -1,9 +1,12 @@
 package org.example.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.example.model.Product;
 
 /**
  * Represents a shop entity in the Mini-Shopify system.
@@ -11,12 +14,16 @@ import org.example.model.Product;
  * This class is mapped to a database table and manages shop-related data.
  */
 @Entity
+@Table(name = "shop")
 public class Shop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id; // Primary key, automatically generated
+    private Long shopId; // Primary key, automatically generated
 
+    @NotBlank(message = "Shop name cannot be empty")
+    @Size(max = 100, message = "Shop name cannot exceed 100 characters")
+    @Pattern(regexp = "^[a-zA-Z0-9\\s-]+$", message = "Shop name can only contain letters, numbers, spaces, and hyphens")
     private String name; // Name of the shop
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -39,8 +46,8 @@ public class Shop {
      * Gets the shop ID.
      * @return the shop ID
      */
-    public Long getId() {
-        return id;
+    public Long getShopId() {
+        return shopId;
     }
 
     /**
@@ -114,7 +121,7 @@ public class Shop {
      * @param id the shop ID to set
      */
     public void setId(Long id) {
-        this.id = id;
+        this.shopId = id;
     }
 
     /**

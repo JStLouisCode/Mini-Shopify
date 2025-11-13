@@ -30,7 +30,7 @@ public class OrderAndCheckoutFacade {
         // 4. Check if the product was found
         if (p != null) {
             // Product was found, now check quantity
-            if (p.getQuantity() > 0){
+            if (p.getProductInventory() > 0){
                 p.setQuantityMinus1();
                 System.out.println("Order successful for product: " + p.getProductID());
             }
