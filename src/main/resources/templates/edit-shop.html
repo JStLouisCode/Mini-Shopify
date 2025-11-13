@@ -4,11 +4,6 @@
     <meta charset="UTF-8">
     <title>Edit Shop</title>
     <link rel="stylesheet" href="/css/style.css">
-    <style>
-        select[multiple] {
-            height: 150px;
-        }
-    </style>
 </head>
 <body>
 <div class="container">
@@ -17,10 +12,14 @@
         <p>Update your shop's information</p>
     </div>
     <form th:action="@{/edit-shop/{id}(id=${shop.id})}" th:object="${shop}" method="post">
-
         <div class="form-group">
             <label for="name">Shop Name *</label>
             <input type="text" id="name" th:field="*{name}" required/>
+        </div>
+        <div class="form-group">
+            <label for="tags">Tags</label>
+            <input type="text" id="tags" name="tags" th:value="${shop.tags != null ? #strings.listJoin(shop.tags, ', ') : ''}" placeholder="e.g., electronics, books, clothes"/>
+            <small>Separate multiple tags with commas</small>
         </div>
         <div class="form-group">
             <label for="description">Description</label>
@@ -31,27 +30,16 @@
             <input type="text" id="businessType" th:field="*{businessType}" placeholder="e.g., retail, wholesale, services"/>
         </div>
         <div class="form-group">
-            <label for="tags">Tags</label>
-            <select id="tags" th:field="*{tags}" multiple>
-                <option th:each="tag : ${allTags}"
-                        th:value="${tag}"
-                        th:text="${tag}">
-                </option>
-            </select>
-            <small>Hold Ctrl/Cmd to select multiple</small>
-        </div>
-
-        <div class="form-group">
             <label for="currency">Currency</label>
-            <select id="currency" th:field="*{currency}" required>
+            <select id="currency" th:field="*{currency}">
                 <option value="">Select Currency</option>
-                <option th:each="entry : ${allCurrencies}"
-                        th:value="${entry.key}"
-                        th:text="${entry.value}">
-                </option>
+                <option value="USD">USD - US Dollar</option>
+                <option value="CAD">CAD - Canadian Dollar</option>
+                <option value="EUR">EUR - Euro</option>
+                <option value="GBP">GBP - British Pound</option>
+                <option value="JPY">JPY - Japanese Yen</option>
             </select>
         </div>
-
         <div class="form-group">
             <label for="contact">Contact Email</label>
             <input type="email" id="contact" th:field="*{contact}" placeholder="contact@example.com"/>
@@ -68,3 +56,5 @@
 </div>
 </body>
 </html>
+
+<!-- test -->
