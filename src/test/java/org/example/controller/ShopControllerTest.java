@@ -80,7 +80,8 @@ class ShopControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(shopWithEmptyName)))
                 .andExpect(status().isCreated())
-                .andExpect(header().exists("Location"));
+                .andExpect(header().exists("Location"))
+                .andExpect(status().isBadRequest());
     }
 
     /**
@@ -95,7 +96,8 @@ class ShopControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(shopWithLongName)))
                 .andExpect(status().isCreated())
-                .andExpect(header().exists("Location"));
+                .andExpect(header().exists("Location"))
+                .andExpect(status().isBadRequest());;
     }
 
     /**
@@ -110,11 +112,12 @@ class ShopControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(shopWithSpecialChars)))
                 .andExpect(status().isCreated())
-                .andExpect(header().exists("Location"));
+                .andExpect(header().exists("Location"))
+                .andExpect(status().isBadRequest());;
     }
 
     /**
-     * Tests creating a shop with null fields returns 201 Created status.
+     * Tests creating a shop with null fields returns 400 Created status.
      */
     @Test
     void createShop_NullFields_ReturnsCreated() throws Exception {
@@ -126,7 +129,8 @@ class ShopControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(shopWithNullFields)))
                 .andExpect(status().isCreated())
-                .andExpect(header().exists("Location"));
+                .andExpect(header().exists("Location"))
+                .andExpect(status().isBadRequest());;
     }
 
     // ===== READ TESTS =====
@@ -149,8 +153,8 @@ class ShopControllerTest {
         MvcResult createResult = mockMvc.perform(post("/shops")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(sampleShop)))
-                .andExpect(status().isCreated())
-                .andReturn();
+                        .andExpect(status().isCreated())
+                        .andReturn();
 
         String location = createResult.getResponse().getHeader("Location");
         assertNotNull(location);
@@ -366,7 +370,7 @@ class ShopControllerTest {
         shop.setCurrency("CAD");
         shop.setTags(List.of("Books"));
         shop = shopRepository.save(shop);
-        Long shopId = shop.getId();
+        Long shopId = shop.getShopId();
 
         // 2. Perform the edit post
         mockMvc.perform(post("/edit-shop/" + shopId)

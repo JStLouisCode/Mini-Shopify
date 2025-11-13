@@ -3,7 +3,6 @@ package org.example.model;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import org.example.model.Product;
 
 /**
  * Represents a shop entity in the Mini-Shopify system.
@@ -11,11 +10,12 @@ import org.example.model.Product;
  * This class is mapped to a database table and manages shop-related data.
  */
 @Entity
+@Table(name = "shop")
 public class Shop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id; // Primary key, automatically generated
+    private Long shopId; // Primary key, automatically generated
 
     private String name; // Name of the shop
 
@@ -39,8 +39,8 @@ public class Shop {
      * Gets the shop ID.
      * @return the shop ID
      */
-    public Long getId() {
-        return id;
+    public Long getShopId() {
+        return shopId;
     }
 
     /**
@@ -114,7 +114,7 @@ public class Shop {
      * @param id the shop ID to set
      */
     public void setId(Long id) {
-        this.id = id;
+        this.shopId = id;
     }
 
     /**
