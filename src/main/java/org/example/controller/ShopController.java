@@ -56,10 +56,20 @@ public class ShopController {
      * Displays the products page.
      * @return the products view name
      */
-    @GetMapping("/products")
-    public String products() {
-        return "products";
+    @GetMapping("/shop/{id}")
+    public String products(@PathVariable long id, Model model) {
+        Optional<Shop> shop = shopRepository.findById(id);
+
+        if (shop.isPresent()){
+            model.addAttribute("shop", shop.get());
+            return "products";
+        }
+
+        return "Error";
     }
+
+
+
 
     /**
      * Displays the orders page.
@@ -70,24 +80,29 @@ public class ShopController {
         return "orders";
     }
 
-    @GetMapping("/shop/{id}")
-    public String products(@PathVariable long id, Model model) {
-        Optional<Shop> shop = shopRepository.findById(id);
-
-        if (shop.isPresent()){
-            model.addAttribute("shop", shop.get());
-            return "shop";
-        }
-
-        return "Error";
+    /**
+     * Displays all existing shops.
+     * @param model the model to add attributes to
+     * @return the view-existing-shops view name
+     */
+    @GetMapping("/view-existing-shops")
+    public String ViewExistingShops(Model model) {
+        // Retrieve all shops from database and add to model
+        model.addAttribute("shops", shopRepository.findAll());
+        return "view-existing-shops";
     }
 
+    /**
+     * Shows the shop selection page.
+     * @param model the model to add attributes to
+     * @return the select-shop view name
+     */
     @GetMapping("/select-shop")
     public String selectShop(Model model) {
         model.addAttribute("shops", shopRepository.findAll());
         return "select-shop";
     }
-
+    // -----------------
 
     @GetMapping("/edit-shop/{id}")
     // === FIX WAS HERE ===
@@ -110,13 +125,5 @@ public class ShopController {
         shopRepository.save(shop);
         return "redirect:/select-shop";
     }
-
-    @GetMapping("/view-existing-shops")
-    public String viewExistingShops(Model model) {
-        // This line gets all shops from the database
-        model.addAttribute("shops", shopRepository.findAll());
-
-        // This tells Spring to use your "view-existing-shops.html" file
-        return "view-existing-shops";
-    }
+    
 }
