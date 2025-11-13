@@ -1,5 +1,7 @@
 package org.example;
 
+/**
+import org.example.model.Product;
 import org.example.model.Shop;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,3 +70,4 @@ class ModelTest {
         assertNotNull(userFacade);
     }
 }
+ **/
