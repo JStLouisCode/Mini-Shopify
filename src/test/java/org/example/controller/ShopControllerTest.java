@@ -19,23 +19,31 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Test class for ShopController endpoints and functionality.
+ * Tests CRUD operations and various edge cases for shop management.
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 class ShopControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private MockMvc mockMvc; // Mock MVC for testing web endpoints
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper; // JSON serializer/deserializer
 
-    private Shop sampleShop;
+    private Shop sampleShop; // Sample shop for testing
     @Autowired
-    private ShopRepository shopRepository;
+    private ShopRepository shopRepository; // Shop repository for database operations
 
+    /**
+     * Set up test data before each test method.
+     * Clears the database and creates a sample shop.
+     */
     @BeforeEach
     void setUp() {
-        shopRepository.deleteAll();
+        shopRepository.deleteAll(); // Clear database before each test
         sampleShop = new Shop();
         sampleShop.setName("Test Shop");
         sampleShop.setDescription("A test shop for unit testing");
@@ -48,6 +56,9 @@ class ShopControllerTest {
 
     // ===== CREATE TESTS =====
 
+    /**
+     * Tests creating a valid shop returns 201 Created status.
+     */
     @Test
     void createShop_ValidShop_ReturnsCreated() throws Exception {
         mockMvc.perform(post("/shops")
@@ -57,6 +68,9 @@ class ShopControllerTest {
                 .andExpect(header().exists("Location"));
     }
 
+    /**
+     * Tests creating a shop with empty name returns 201 Created status.
+     */
     @Test
     void createShop_EmptyName_ReturnsCreated() throws Exception {
         Shop shopWithEmptyName = new Shop();
@@ -69,6 +83,9 @@ class ShopControllerTest {
                 .andExpect(header().exists("Location"));
     }
 
+    /**
+     * Tests creating a shop with very long name returns 201 Created status.
+     */
     @Test
     void createShop_LongName_ReturnsCreated() throws Exception {
         Shop shopWithLongName = new Shop();
@@ -81,6 +98,9 @@ class ShopControllerTest {
                 .andExpect(header().exists("Location"));
     }
 
+    /**
+     * Tests creating a shop with special characters in name returns 201 Created status.
+     */
     @Test
     void createShop_SpecialCharactersInName_ReturnsCreated() throws Exception {
         Shop shopWithSpecialChars = new Shop();
@@ -93,6 +113,9 @@ class ShopControllerTest {
                 .andExpect(header().exists("Location"));
     }
 
+    /**
+     * Tests creating a shop with null fields returns 201 Created status.
+     */
     @Test
     void createShop_NullFields_ReturnsCreated() throws Exception {
         Shop shopWithNullFields = new Shop();
@@ -108,12 +131,18 @@ class ShopControllerTest {
 
     // ===== READ TESTS =====
 
+    /**
+     * Tests getting all shops returns 200 OK status.
+     */
     @Test
     void getAllShops_ReturnsSuccess() throws Exception {
         mockMvc.perform(get("/shops"))
                 .andExpect(status().isOk());
     }
 
+    /**
+     * Tests getting all shops after creating one includes the created shop.
+     */
     @Test
     void getAllShops_AfterCreatingShop_ReturnsCreatedShop() throws Exception {
         // First create a shop
@@ -131,12 +160,18 @@ class ShopControllerTest {
                 .andExpect(status().isOk());
     }
 
+    /**
+     * Tests getting a non-existing shop returns 404 Not Found status.
+     */
     @Test
     void getShopById_NonExistingShop_ReturnsNotFound() throws Exception {
         mockMvc.perform(get("/shops/99999"))
                 .andExpect(status().isNotFound());
     }
 
+    /**
+     * Tests getting an existing shop returns 200 OK status.
+     */
     @Test
     void getShopById_ExistingShop_ReturnsShop() throws Exception {
         // Create a shop first
@@ -156,6 +191,9 @@ class ShopControllerTest {
 
     // ===== UPDATE TESTS =====
 
+    /**
+     * Tests updating a valid shop returns 204 No Content status.
+     */
     @Test
     void updateShop_ValidShop_ReturnsNoContent() throws Exception {
         // Create a shop first
@@ -180,6 +218,9 @@ class ShopControllerTest {
                 .andExpect(status().isNoContent());
     }
 
+    /**
+     * Tests partial update of a shop returns 204 No Content status.
+     */
     @Test
     void updateShop_PartialUpdate_ReturnsNoContent() throws Exception {
         // Create a shop first
@@ -204,6 +245,9 @@ class ShopControllerTest {
 
     // ===== DELETE TESTS =====
 
+    /**
+     * Tests deleting an existing shop returns 204 No Content status.
+     */
     @Test
     void deleteShop_ExistingShop_ReturnsNoContent() throws Exception {
         // Create a shop first
@@ -221,12 +265,18 @@ class ShopControllerTest {
                 .andExpect(status().isNoContent());
     }
 
+    /**
+     * Tests deleting a non-existing shop returns 404 Not Found status.
+     */
     @Test
     void deleteShop_NonExistingShop_ReturnsNotFound() throws Exception {
         mockMvc.perform(delete("/shops/99999"))
                 .andExpect(status().isNotFound());
     }
 
+    /**
+     * Tests deleting a shop twice returns 404 Not Found on second attempt.
+     */
     @Test
     void deleteShop_Twice_ReturnsNotFound() throws Exception {
         // Create a shop first
@@ -250,6 +300,9 @@ class ShopControllerTest {
 
     // ===== EDGE CASE TESTS =====
 
+    /**
+     * Tests creating multiple shops all return 201 Created status.
+     */
     @Test
     void createShop_MultipleShops_AllReturnCreated() throws Exception {
         for (int i = 0; i < 5; i++) {
@@ -265,6 +318,9 @@ class ShopControllerTest {
         }
     }
 
+    /**
+     * Tests creating shop with empty request body returns 400 Bad Request status.
+     */
     @Test
     void createShop_EmptyRequestBody_ReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/shops")
@@ -273,6 +329,9 @@ class ShopControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    /**
+     * Tests creating shop with invalid JSON returns 400 Bad Request status.
+     */
     @Test
     void createShop_InvalidJson_ReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/shops")
@@ -281,6 +340,9 @@ class ShopControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    /**
+     * Tests GET endpoints work without content type header.
+     */
     @Test
     void getEndpoints_NoContentType_ReturnsSuccess() throws Exception {
         // GET requests should work without content type
@@ -291,6 +353,9 @@ class ShopControllerTest {
 
     // ===== VIEW EXISTING SHOPS PAGE TESTS =====
 
+    /**
+     * Tests view existing shops page returns correct view name.
+     */
     @Test
     void viewExistingShops_ReturnsCorrectViewName() throws Exception {
         mockMvc.perform(get("/view-existing-shops"))
@@ -298,6 +363,9 @@ class ShopControllerTest {
                 .andExpect(view().name("view-existing-shops"));
     }
 
+    /**
+     * Tests view existing shops page adds shops to model.
+     */
     @Test
     void viewExistingShops_AddsShopsToModel() throws Exception {
         mockMvc.perform(get("/view-existing-shops"))
@@ -305,6 +373,9 @@ class ShopControllerTest {
                 .andExpect(model().attributeExists("shops"));
     }
 
+    /**
+     * Tests view existing shops with empty database returns empty list.
+     */
     @Test
     void viewExistingShops_EmptyDatabase_ReturnsEmptyList() throws Exception {
         mockMvc.perform(get("/view-existing-shops"))
@@ -313,7 +384,9 @@ class ShopControllerTest {
                 .andExpect(model().attribute("shops", org.hamcrest.Matchers.empty()));
     }
 
-
+    /**
+     * Tests view existing shops with existing shops includes shops in model.
+     */
     @Test
     void viewExistingShops_WithExistingShops_ShopsListInModel() throws Exception {
         mockMvc.perform(post("/shops")
@@ -329,6 +402,9 @@ class ShopControllerTest {
                 .andExpect(model().attribute("shops", org.hamcrest.Matchers.hasSize(org.hamcrest.Matchers.greaterThanOrEqualTo(1))));
     }
 
+    /**
+     * Tests view existing shops with multiple shops includes all shops in model.
+     */
     @Test
     void viewExistingShops_WithMultipleShops_AllShopsInModel() throws Exception {
         // Create multiple shops
@@ -352,7 +428,9 @@ class ShopControllerTest {
                 .andExpect(model().attribute("shops", org.hamcrest.Matchers.hasSize(org.hamcrest.Matchers.greaterThanOrEqualTo(3))));
     }
 
-
+    /**
+     * Tests view existing shops verifies all shop details are present.
+     */
     @Test
     void viewExistingShops_VerifyShopDetails_AllFieldsPresent() throws Exception {
         mockMvc.perform(post("/shops")
