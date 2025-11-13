@@ -70,12 +70,24 @@ public class ShopController {
         return "orders";
     }
 
+    @GetMapping("/shop/{id}")
+    public String products(@PathVariable long id, Model model) {
+        Optional<Shop> shop = shopRepository.findById(id);
+
+        if (shop.isPresent()){
+            model.addAttribute("shop", shop.get());
+            return "shop";
+        }
+
+        return "Error";
+    }
+
     @GetMapping("/select-shop")
     public String selectShop(Model model) {
         model.addAttribute("shops", shopRepository.findAll());
         return "select-shop";
     }
-    // -----------------
+
 
     @GetMapping("/edit-shop/{id}")
     // === FIX WAS HERE ===
