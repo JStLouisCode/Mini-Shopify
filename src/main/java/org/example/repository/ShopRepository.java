@@ -14,5 +14,5 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
     // No additional methods needed - inherits all standard CRUD operations from JpaRepository
     // including: save(), findById(), findAll(), deleteById(), count(), etc.
 
-    Optional<Shop> findByName(String name);
+    Optional<Shop> findByName(String newFormShop); // used for a test
 }

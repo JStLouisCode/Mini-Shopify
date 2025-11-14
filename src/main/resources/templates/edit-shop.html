@@ -16,7 +16,7 @@
         <h1>Edit Shop</h1>
         <p>Update your shop's information</p>
     </div>
-    <form th:action="@{/edit-shop/{id}(id=${shop.id})}" th:object="${shop}" method="post">
+    <form th:action="@{/edit-shop/{id}(id=${shop.shopId})}" th:object="${shop}" method="post">
 
         <div class="form-group">
             <label for="name">Shop Name *</label>

@@ -29,7 +29,7 @@
                 <p class="shop-description" th:text="${shop.description} ?: 'No description available'">Description</p>
             </div>
             <div class="shop-select-actions">
-                <a th:href="@{/edit-shop/{id}(id=${shop.id})}" class="btn btn-primary">Edit This Shop</a>
+                <a th:href="@{/edit-shop/{id}(id=${shop.shopId})}" class="btn btn-primary">Edit This Shop</a>
             </div>
         </div>
     </div>
