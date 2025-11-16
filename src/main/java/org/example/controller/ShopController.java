@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*; // Make sure this is imported
+import org.example.model.Product;
+import org.example.repository.ProductRepository;
 
 import java.net.URI;
 import java.util.List;
@@ -20,6 +22,8 @@ public class ShopController {
 
     @Autowired
     private ShopRepository shopRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
     private final List<String> PREDEFINED_TAGS = List.of(
             "Electronics", "Books", "Clothing", "Home", "Toys", "Sports", "Grocery"
@@ -31,6 +35,18 @@ public class ShopController {
             "EUR", "EUR - Euro",
             "GBP", "GBP - British Pound",
             "JPY", "JPY - Japanese Yen"
+    );
+
+    private final List<String> PREDEFINED_BUSINESS_TYPES = List.of(
+            "Retail",
+            "Services",
+            "Food & Beverage",
+            "Technology",
+            "Healthcare",
+            "Manufacturing",
+            "Government",
+            "Education",
+            "Other"
     );
 
     // --- ADDED BACK ---
@@ -47,6 +63,7 @@ public class ShopController {
         model.addAttribute("shop", new Shop());
         model.addAttribute("allTags", PREDEFINED_TAGS);
         model.addAttribute("allCurrencies", PREDEFINED_CURRENCIES);
+        model.addAttribute("allBusinessTypes", PREDEFINED_BUSINESS_TYPES);
         return "create-shop";
     }
 
@@ -117,6 +134,7 @@ public class ShopController {
             model.addAttribute("shop", shop.get());
             model.addAttribute("allTags", PREDEFINED_TAGS);
             model.addAttribute("allCurrencies", PREDEFINED_CURRENCIES);
+            model.addAttribute("allBusinessTypes", PREDEFINED_BUSINESS_TYPES);
             return "edit-shop";
         }
         return "redirect:/select-shop";
@@ -163,6 +181,53 @@ public class ShopController {
         Optional<Shop> shop = shopRepository.findById(id);
         return shop.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Displays the product management page for a specific shop.
+     * This page shows existing products and a form to add new ones.
+     *
+     * @param shopId The ID of the shop to manage.
+     * @param model  The Spring UI model.
+     * @return The 'manage-products' view.
+     */
+    @GetMapping("/shop/{shopId}/manage")
+    public String manageProducts(@PathVariable("shopId") Long shopId, Model model) {
+        Optional<Shop> shopOpt = shopRepository.findById(shopId);
+
+        if (shopOpt.isPresent()) {
+            Shop shop = shopOpt.get();
+            model.addAttribute("shop", shop);
+            // Add an empty Product object to bind to the "Add Product" form
+            model.addAttribute("newProduct", new Product());
+            return "manage-products";
+        }
+
+        // If shop not found, redirect to a safe page
+        return "redirect:/select-shop";
+    }
+
+    /**
+     * Handles the form submission for adding a new product to a shop.
+     *
+     * @param shopId  The ID of the shop to add the product to.
+     * @param product The Product object from the form (@ModelAttribute).
+     * @return A redirect back to the management page.
+     */
+    @PostMapping("/shop/{shopId}/products/add")
+    public String addProduct(@PathVariable("shopId") Long shopId, @ModelAttribute Product product) {
+        Optional<Shop> shopOpt = shopRepository.findById(shopId);
+
+        if (shopOpt.isPresent()) {
+            Shop shop = shopOpt.get();
+            // Set the parent shop on the new product
+            product.setShop(shop);
+            // Save the new product
+            productRepository.save(product);
+        }
+
+        // Redirect back to the management page for the same shop
+        return "redirect:/shop/" + shopId + "/manage";
     }
 
     /**

@@ -27,7 +27,13 @@
         </div>
         <div class="form-group">
             <label for="businessType">Business Type</label>
-            <input type="text" id="businessType" th:field="*{businessType}" placeholder="e.g., retail, government">
+            <select id="businessType" th:field="*{businessType}">
+                <option value="">Select a Business Type</option>
+                <option th:each="type : ${allBusinessTypes}"
+                        th:value="${type}"
+                        th:text="${type}">
+                </option>
+            </select>
         </div>
         <div class="form-group">
             <label for="tags">Tags</label>
