@@ -26,11 +26,12 @@
                 <th>Currency</th>
                 <th>Contact</th>
                 <th>Social Media</th>
+                <th>Products</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="shop : ${shops}">
-                <td th:text="${shop.id}">1</td>
+                <td th:text="${shop.shopId}">1</td>
                 <td th:text="${shop.name}">Shop Name</td>
                 <td th:text="${shop.businessType}">Business Type</td>
                 <td th:text="${shop.description}">Description</td>
@@ -38,6 +39,9 @@
                 <td th:text="${shop.currency}">Currency</td>
                 <td th:text="${shop.contact}">Contact</td>
                 <td th:text="${shop.socialMediaLinks}">Social Media</td>
+                <td>
+                    <a th:href="@{'/shop/' + ${shop.shopId}}" class="btn">View Products</a>
+                </td>
             </tr>
             </tbody>
         </table>
