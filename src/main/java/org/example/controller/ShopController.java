@@ -15,6 +15,7 @@ import org.example.repository.ProductRepository;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -229,6 +230,80 @@ public class ShopController {
         // Redirect back to the management page for the same shop
         return "redirect:/shop/" + shopId + "/manage";
     }
+
+    @GetMapping("/shop/{shopId}/products/{productId}/edit")
+    public String editProduct(@PathVariable("shopId") Long shopId, @PathVariable("productId") Long productId, Model model) {
+        Optional<Shop> shopOpt = shopRepository.findById(shopId);
+        Optional<Product> productOpt = productRepository.findById(productId);
+        if (shopOpt.isPresent() && productOpt.isPresent()) {
+            Shop shop = shopOpt.get();
+            model.addAttribute("shop", shop);
+            model.addAttribute("product", productOpt.get());
+            return "edit-product";
+        }
+        return "redirect:/shop/" + shopId + "/manage";
+    }
+
+    @PostMapping("/shop/{shopId}/products/{productId}/edit")
+    public String updateProduct(@PathVariable("shopId") Long shopId, @PathVariable("productId") Long productId, @ModelAttribute Product product) {
+        Optional<Shop> shopOpt = shopRepository.findById(shopId);
+        Optional<Product> productOpt = productRepository.findById(productId);
+
+        if (shopOpt.isPresent() && productOpt.isPresent()) {
+            Product existingProduct = productOpt.get();
+
+            // Update fields from form
+            existingProduct.setProductName(product.getProductName());
+            existingProduct.setProductDescription(product.getProductDescription());
+            existingProduct.setProductPrice(product.getProductPrice());
+            existingProduct.setProductCategory(product.getProductCategory());
+            existingProduct.setProductInventory(product.getProductInventory());
+            existingProduct.setPictureUrl(product.getPictureUrl());
+
+            // Save updated product
+            productRepository.save(existingProduct);
+
+            return "redirect:/shop/" + shopId + "/manage";
+        }
+
+        return "redirect:/select-shop";
+    }
+
+    /**
+     * Handles the form submission for deleting a product from a shop.
+     * This method is called when the user clicks the "Delete" button.
+     *
+     * @param productId The ID of the product to delete.
+     * @return A redirect back to the management page for the same shop.
+     */
+    @PostMapping("/products/{id}/delete")
+    public String deleteProduct(@PathVariable("id") Long productId) {
+        Long shopId = null;
+
+        // Find the product so we know which shop to redirect back to
+        Optional<Product> productOpt = productRepository.findById(productId);
+        if (productOpt.isPresent()) {
+            Product product = productOpt.get();
+
+            // Get the parent shop (may be null if not set for some reason)
+            Shop shop = product.getShop();
+            if (shop != null) {
+                shopId = shop.getShopId();   // adjust getter name if needed
+            }
+
+            // Delete the product
+            productRepository.delete(product);
+        }
+
+        // Redirect back to the manage page for that shop if we know it,
+        // otherwise fall back to the shop selection page.
+        if (shopId != null) {
+            return "redirect:/shop/" + shopId + "/manage";
+        } else {
+            return "redirect:/select-shop";
+        }
+    }
+
 
     /**
      * REST API endpoint to update a shop.
