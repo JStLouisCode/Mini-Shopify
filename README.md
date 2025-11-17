@@ -25,7 +25,7 @@ This application is an e-commerce platform that allows merchants to create their
 
 ---
 
-## Current Project Status (Milestone 1 Complete)
+## Current Project Status (Milestone 2 Complete)
 
 We have successfully completed **Milestone 2**. We currently have much of the funcitonality for the final build complete, but no the whole way.
 
