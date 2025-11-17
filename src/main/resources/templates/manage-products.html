@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Manage Products</title>
@@ -117,8 +117,12 @@
 
             <div class="form-group">
                 <label for="productCategory">Product Category</label>
-                <input type="text" id="productCategory" th:field="*{productCategory}"
-                       placeholder="e.g., Electronics, Books, Clothing"/>
+                <select id="productCategory" th:field="*{productCategory}">
+                    <option th:each="category : ${allTags}"
+                            th:value="${category}"
+                            th:text="${category}">
+                    </option>
+                </select>
             </div>
 
             <div class="form-group">
