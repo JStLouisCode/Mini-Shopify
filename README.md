@@ -27,11 +27,13 @@ This application is an e-commerce platform that allows merchants to create their
 
 ## Current Project Status (Milestone 1 Complete)
 
-We have successfully completed **Milestone 1**. Our current functionality focuses on the **Merchant** experience and shop setup.
+We have successfully completed **Milestone 2**. We currently have much of the funcitonality for the final build complete, but no the whole way.
 
 ### Completed Features
 * **Shop Creation:** Merchants can create a new shop by filling out a form with the shop's name, tags, description, and other details.
 * **View All Shops:** A central page exists to view all shops currently in the system.
+* **View All Products in a Shop:** One can now view all of the products that currently exist inside of a shop
+* **Manage Products:** Merchants now have page to manage products
 * **Shop Customization:** Merchants have the ability to edit and update the details of their existing shops.
 
 ### Project Backlog
@@ -43,7 +45,7 @@ Our full project backlog, user stories, and task breakdown are managed on our Gi
 
 ## Plan for Next Sprint (Milestone 2)
 
-Our focus for Milestone 2 is to build out the **Product Management** and **Customer Browsing** features.
+Our focus for Milestone 3 is to build out the the final feature, especially for adding pictures features.
 
 * **Product Management:** Implement functionality for merchants to upload products to their specific shop, including fields for product name, description, picture, and inventory count.
 * **Customer Catalog:** Create the customer-facing view for a shop, allowing anyone to browse its product catalog.
