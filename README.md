@@ -43,14 +43,13 @@ Our full project backlog, user stories, and task breakdown are managed on our Gi
 
 ---
 
-## Plan for Next Sprint (Milestone 2)
+## Plan for Next Sprint (Milestone 3)
 
 Our focus for Milestone 3 is to build out the the final feature, especially for adding pictures features.
 
-* **Product Management:** Implement functionality for merchants to upload products to their specific shop, including fields for product name, description, picture, and inventory count.
-* **Customer Catalog:** Create the customer-facing view for a shop, allowing anyone to browse its product catalog.
+* **Customer Product Page:** Create a page that lets users click on and inspect each product indivdually
 * **Search Functionality:** Implement a search feature for customers to find shops, either by a direct name lookup or by searching via tags/categories.
-* **Shopping Cart (Stretch Goal):** Begin development of the shopping cart functionality, allowing users to add products.
+* **Shopping Cart:** Begin development of the shopping cart functionality, allowing users to add products.
 
 ---
 
