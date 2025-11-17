@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results - Mini-Shopify</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .search-container {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .search-form {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+        .search-input-group {
+            flex: 1;
+            min-width: 250px;
+        }
+        .search-type-group {
+            min-width: 150px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+        .results-header {
+            margin: 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Search Shops</h1>
+        <p>Find shops by name or tag</p>
+    </div>
+
+    <!-- Search Form -->
+    <div class="search-container">
+        <form action="/search-results" method="get" class="search-form">
+            <div class="search-input-group">
+                <label for="query">Search Query</label>
+                <input
+                        type="text"
+                        id="query"
+                        name="query"
+                        class="search-input"
+                        placeholder="Enter shop name or tag..."
+                        th:value="${query}"
+                        required>
+            </div>
+
+            <div class="search-type-group">
+                <label>Search By</label>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="type" value="name" th:checked="${type == 'name' or type == null}">
+                        Name
+                    </label>
+                    <label>
+                        <input type="radio" name="type" value="tag" th:checked="${type == 'tag'}">
+                        Tag
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+
+    <!-- Results Section -->
+    <div class="results-header" th:if="${query != null}">
+        <h2>Search Results for "<span th:text="${query}"></span>"</h2>
+        <p th:if="${shops != null and !shops.isEmpty()}">
+            Found <strong th:text="${shops.size()}"></strong> shop(s)
+        </p>
+    </div>
+
+    <!-- No Results -->
+    <div class="no-results" th:if="${query != null and (shops == null or shops.isEmpty())}">
+        <h3>No shops found</h3>
+        <p>Try searching with different keywords or tags.</p>
+        <a href="/search-results" class="btn">New Search</a>
+    </div>
+
+    <!-- Results List -->
+    <div class="shop-selection" th:if="${shops != null and !shops.isEmpty()}">
+        <div th:each="shop : ${shops}" class="shop-card-select">
+            <div class="shop-info">
+                <h2 th:text="${shop.name}">Shop Name</h2>
+                <div class="shop-meta">
+                    <span class="badge" th:if="${shop.tags != null and !shop.tags.isEmpty()}"
+                          th:text="${#strings.listJoin(shop.tags, ', ')}">Tags</span>
+                    <span class="shop-type" th:if="${shop.businessType}"
+                          th:text="${shop.businessType}">Business Type</span>
+                </div>
+                <p class="shop-description" th:text="${shop.description} ?: 'No description available'">Description</p>
+            </div>
+            <div class="shop-select-actions">
+                <a th:href="@{/shop/{id}(id=${shop.shopId})}" class="btn btn-primary">View Products</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-link">
+        <a href="/">&larr; Back to Home</a>
+    </div>
+</div>
+</body>
+</html>
