@@ -365,4 +365,38 @@ public class ShopController {
         return ResponseEntity.ok(results);
     }
 
+    /**
+     * Displays the search results page with a search form.
+     * Processes search queries and shows matching shops.
+     *
+     * @param query the search query (optional)
+     * @param type the search type: "name" or "tag" (optional)
+     * @param model the model to add attributes to
+     * @return the search-results view name
+     */
+    @GetMapping("/search-results")
+    public String searchResultsPage(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false, defaultValue = "name") String type,
+            Model model) {
+
+        model.addAttribute("query", query);
+        model.addAttribute("type", type);
+
+        // Only search if query is provided
+        if (query != null && !query.trim().isEmpty()) {
+            List<Shop> results;
+
+            if ("tag".equalsIgnoreCase(type)) {
+                results = shopRepository.findByTagsContainingIgnoreCase(query.trim());
+            } else {
+                results = shopRepository.findByNameContainingIgnoreCase(query.trim());
+            }
+
+            model.addAttribute("shops", results);
+        }
+
+        return "search-results";
+    }
+
 }
