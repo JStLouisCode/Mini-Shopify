@@ -5,10 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Existing Shops</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .search-container {
+            margin: 20px 0 30px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+
+        .search-type-selector {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .search-type-selector label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .search-type-selector input[type="radio"] {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
     <h1>Existing Shops</h1>
+
+    <!-- Search Section -->
+    <div class="search-container">
+        <form action="/search-results" method="get" class="search-form">
+            <input type="text"
+                   name="query"
+                   class="search-input"
+                   placeholder="Search by shop name or tag..."
+                   required>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        <div class="search-type-selector">
+            <span>Search by:</span>
+            <label>
+                <input type="radio" name="type" value="name" checked> Shop Name
+            </label>
+            <label>
+                <input type="radio" name="type" value="tag"> Tag
+            </label>
+        </div>
+    </div>
 
     <div th:if="${shops.isEmpty()}" class="no-shops">
         <p>No shops found. <a th:href="@{/create-shop}">Create your first shop</a></p>
@@ -52,5 +120,29 @@
         <a th:href="@{/}" class="btn">Back to Home</a>
     </div>
 </div>
+
+<script>
+    // Update the form action and placeholder based on selected search type
+    const form = document.querySelector('.search-form');
+    const radios = document.querySelectorAll('input[name="type"]');
+
+    radios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const searchInput = document.querySelector('.search-input');
+            if (e.target.value === 'tag') {
+                searchInput.placeholder = 'Search by tag...';
+            } else {
+                searchInput.placeholder = 'Search by shop name...';
+            }
+        });
+    });
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const query = document.querySelector('input[name="query"]').value;
+        const type = document.querySelector('input[name="type"]:checked').value;
+        window.location.href = `/search-results?query=${encodeURIComponent(query)}&type=${type}`;
+    });
+</script>
 </body>
 </html>

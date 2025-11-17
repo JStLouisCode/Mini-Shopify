@@ -4,6 +4,52 @@
     <meta charset="UTF-8">
     <title>Mini-Shopify Home</title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .search-container {
+            margin: 30px 0;
+            padding: 25px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+
+        .search-type-selector {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .search-type-selector label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .search-type-selector input[type="radio"] {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -11,6 +57,29 @@
         <h1>Welcome to Mini-Shopify</h1>
         <p>Your all-in-one shop management platform.</p>
     </header>
+
+    <!-- Search Section -->
+    <section class="search-container">
+        <h2>Search for Shops</h2>
+        <form action="/search-results" method="get" class="search-form">
+            <input type="text"
+                   name="query"
+                   class="search-input"
+                   placeholder="Search by shop name or tag..."
+                   required>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        <div class="search-type-selector">
+            <span>Search by:</span>
+            <label>
+                <input type="radio" name="type" value="name" checked> Shop Name
+            </label>
+            <label>
+                <input type="radio" name="type" value="tag"> Tag
+            </label>
+        </div>
+    </section>
 
     <section class="actions">
         <h2>What would you like to do?</h2>
@@ -24,13 +93,36 @@
     <section class="info">
         <p>Use this page to manage all your Mini-Shopify shops.</p>
         <ul>
+            <li><strong>Search:</strong> Find shops by name or tag quickly.</li>
             <li><strong>Create Shop:</strong> Start a new store by filling out a simple form.</li>
             <li><strong>View Shops:</strong> See a list of all your registered shops.</li>
             <li><strong>Edit Shop:</strong> Update an existing shop's details.</li>
         </ul>
     </section>
 </div>
+
+<script>
+    // Update the form action based on selected search type
+    const form = document.querySelector('.search-form');
+    const radios = document.querySelectorAll('input[name="type"]');
+
+    radios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const searchInput = document.querySelector('.search-input');
+            if (e.target.value === 'tag') {
+                searchInput.placeholder = 'Search by tag...';
+            } else {
+                searchInput.placeholder = 'Search by shop name...';
+            }
+        });
+    });
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const query = document.querySelector('input[name="query"]').value;
+        const type = document.querySelector('input[name="type"]:checked').value;
+        window.location.href = `/search-results?query=${encodeURIComponent(query)}&type=${type}`;
+    });
+</script>
 </body>
 </html>
-
-<!-- test -->
