@@ -201,6 +201,7 @@ public class ShopController {
             model.addAttribute("shop", shop);
             // Add an empty Product object to bind to the "Add Product" form
             model.addAttribute("newProduct", new Product());
+            model.addAttribute("allTags", PREDEFINED_TAGS);
             return "manage-products";
         }
 
@@ -239,6 +240,7 @@ public class ShopController {
             Shop shop = shopOpt.get();
             model.addAttribute("shop", shop);
             model.addAttribute("product", productOpt.get());
+            model.addAttribute("allTags", PREDEFINED_TAGS);
             return "edit-product";
         }
         return "redirect:/shop/" + shopId + "/manage";

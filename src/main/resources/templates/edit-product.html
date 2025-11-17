@@ -46,11 +46,13 @@
 
         <!-- Product Category -->
         <div class="form-group">
-            <label for="productCategory">Category</label>
-            <input type="text"
-                   id="productCategory"
-                   th:field="*{productCategory}"
-                   placeholder="e.g., Electronics, Clothing"/>
+            <label for="productCategory">Product Category</label>
+            <select id="productCategory" th:field="*{productCategory}">
+                <option th:each="category : ${allTags}"
+                        th:value="${category}"
+                        th:text="${category}">
+                </option>
+            </select>
         </div>
 
         <!-- Product Inventory -->
