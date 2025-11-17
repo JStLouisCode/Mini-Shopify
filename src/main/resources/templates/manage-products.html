@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Products</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        table.product-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        table.product-table th,
+        table.product-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        table.product-table th {
+            background-color: #f5f5f5;
+        }
+
+        .inline-form {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1 th:text="'Manage Products for ' + ${shop.name}">Manage Products</h1>
+        <p>View, edit, delete, and add products for this shop.</p>
+    </div>
+
+    <!-- Existing products list -->
+    <div class="form-group">
+        <h2>Existing Products</h2>
+
+        <table class="product-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Inventory</th>
+                <th>URL</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Show message if there are no products -->
+            <tr th:if="${#lists.isEmpty(shop.products)}">
+                <td colspan="8">No products have been added yet.</td>
+            </tr>
+
+            <!-- List all products for this shop -->
+            <tr th:each="product : ${shop.products}">
+                <td th:text="${product.productID}">1</td>
+                <td th:text="${product.productName}">Sample Product</td>
+                <td th:text="${product.productDescription}">Sample description...</td>
+                <td th:text="${product.productPrice}">0.00</td>
+                <td th:text="${product.productCategory}">Category</td>
+                <td th:text="${product.productInventory}">0</td>
+                <td>
+                    <a th:href="${product.pictureUrl}"
+                       th:text="${product.pictureUrl}"
+                       target="_blank">
+                        https://example.com
+                    </a>
+                </td>
+                <td>
+                    <!-- Edit link: -->
+                    <a th:href="@{/shop/{shopId}/products/{productId}/edit(shopId=${shop.shopId}, productId=${product.productID})}"
+                       class="btn btn-primary">Edit</a>
+
+                    <!-- Delete form: -->
+                    <form th:action="@{/products/{id}/delete(id=${product.productID})}"
+                          method="post"
+                          class="inline-form">
+                        <button type="submit" class="btn btn-secondary">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add new product form -->
+    <div class="form-group">
+        <h2>Add New Product</h2>
+
+        <!-- Uses /shop/{shopId}/products/add -->
+        <form th:action="@{/shop/{shopId}/products/add(shopId=${shop.shopId})}"
+              th:object="${newProduct}"
+              method="post">
+
+            <div class="form-group">
+                <label for="productName">Product Name *</label>
+                <input type="text" id="productName" th:field="*{productName}" required/>
+            </div>
+
+            <div class="form-group">
+                <label for="productDescription">Product Description</label>
+                <textarea id="productDescription" th:field="*{productDescription}" rows="3"
+                          placeholder="Describe this product..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="productPrice">Product Price *</label>
+                <input type="number" id="productPrice" th:field="*{productPrice}"
+                       step="0.01" min="0" required/>
+            </div>
+
+            <div class="form-group">
+                <label for="productCategory">Product Category</label>
+                <select id="productCategory" th:field="*{productCategory}">
+                    <option th:each="category : ${allTags}"
+                            th:value="${category}"
+                            th:text="${category}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="productInventory">Product Inventory</label>
+                <input type="number" id="productInventory" th:field="*{productInventory}"
+                       min="0"/>
+            </div>
+
+            <div class="form-group">
+                <label for="pictureUrl">Picture URL</label>
+                <input type="text" id="pictureUrl" th:field="*{pictureUrl}"
+                       placeholder="https://example.com/product"/>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary">Add Product</button>
+                <a th:href="@{/select-shop}" class="btn btn-secondary">Back to Shops</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

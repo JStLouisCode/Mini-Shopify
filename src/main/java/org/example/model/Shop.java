@@ -23,7 +23,7 @@ public class Shop {
 
     @NotBlank(message = "Shop name cannot be empty")
     @Size(max = 100, message = "Shop name cannot exceed 100 characters")
-    @Pattern(regexp = "^[a-zA-Z0-9\\s-]+$", message = "Shop name can only contain letters, numbers, spaces, and hyphens")
+    @Pattern(regexp = "^[a-zA-Z0-9\\s-']+$", message = "Shop name can only contain letters, numbers, spaces, and hyphens")
     private String name; // Name of the shop
 
     @ElementCollection(fetch = FetchType.EAGER)
