@@ -91,8 +91,6 @@ public class ShopController {
     }
 
 
-
-
     /**
      * Displays the orders page.
      * @return the orders view name
@@ -332,6 +330,39 @@ public class ShopController {
         }
         shopRepository.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+
+    /**
+     * REST API endpoint to search for shops.
+     * Accepts query parameters for name or tag search.
+     *
+     * @param query the search query string (optional)
+     * @param type the search type: "name" or "tag" (optional, defaults to "name")
+     * @return list of matching shops
+     */
+    @GetMapping("/search")
+    @ResponseBody
+    public ResponseEntity<List<Shop>> searchShops(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false, defaultValue = "name") String type) {
+
+        // If no query provided, return empty list
+        if (query == null || query.trim().isEmpty()) {
+            return ResponseEntity.ok(List.of());
+        }
+
+        List<Shop> results;
+
+        // Search based on type
+        if ("tag".equalsIgnoreCase(type)) {
+            results = shopRepository.findByTagsContainingIgnoreCase(query.trim());
+        } else {
+            // Default to name search
+            results = shopRepository.findByNameContainingIgnoreCase(query.trim());
+        }
+
+        return ResponseEntity.ok(results);
     }
 
 }
