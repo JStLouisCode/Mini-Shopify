@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*; // Make sure this is imported
 import org.example.model.Product;
 import org.example.repository.ProductRepository;
@@ -69,7 +70,18 @@ public class ShopController {
     }
 
     @PostMapping("/create-shop")
-    public String createShop(@ModelAttribute Shop shop) {
+    public String createShop(
+            @Valid @ModelAttribute("shop") Shop shop,
+            BindingResult result,
+            Model model
+    ) {
+        if (result.hasErrors()) {
+            model.addAttribute("allTags", PREDEFINED_TAGS);
+            model.addAttribute("allCurrencies", PREDEFINED_CURRENCIES);
+            model.addAttribute("allBusinessTypes", PREDEFINED_BUSINESS_TYPES);
+            return "create-shop";
+        }
+
         shopRepository.save(shop);
         return "redirect:/";
     }
