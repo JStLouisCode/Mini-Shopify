@@ -6,7 +6,12 @@
     <link rel="stylesheet" href="/css/style.css">
     <style>
         select[multiple] {
-            height: 150px; /* Give the multi-select box some height */
+            height: 150px;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 4px;
         }
     </style>
 </head>
@@ -21,10 +26,20 @@
             <label for="name">Shop Name</label>
             <input type="text" id="name" th:field="*{name}" required>
         </div>
+
+        <div th:if="${#fields.hasErrors('name')}" class="error-message">
+            <span th:errors="*{name}"></span>
+        </div>
+
         <div class="form-group">
             <label for="description">Description</label>
             <input type="text" id="description" th:field="*{description}" placeholder="">
         </div>
+
+        <div th:if="${#fields.hasErrors('description')}" class="error-message">
+            <span th:errors="*{description}"></span>
+        </div>
+
         <div class="form-group">
             <label for="businessType">Business Type</label>
             <select id="businessType" th:field="*{businessType}">
@@ -35,6 +50,7 @@
                 </option>
             </select>
         </div>
+
         <div class="form-group">
             <label for="tags">Tags</label>
             <select id="tags" th:field="*{tags}" multiple>
@@ -61,10 +77,12 @@
             <label for="contact">Contact</label>
             <input type="text" id="contact" th:field="*{contact}" placeholder="">
         </div>
+
         <div class="form-group">
             <label for="socialMediaLinks">Social Media Links</label>
             <input type="text" id="socialMediaLinks" th:field="*{socialMediaLinks}" placeholder="e.g., Instagram, X">
         </div>
+
         <button type="submit" class="btn">Create Shop</button>
     </form>
 </div>

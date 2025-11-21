@@ -31,6 +31,7 @@ public class Shop {
     @Column(name = "tag")
     private List<String> tags = new ArrayList<>(); // Tags associated with the shop, stored in separate table
 
+    @Size(max = 250, message = "Description cannot exceed 250 characters")
     private String description; // Description of the shop
     private String businessType; // Type of business (e.g., retail, service, etc.)
     private String currency; // Currency used by the shop
