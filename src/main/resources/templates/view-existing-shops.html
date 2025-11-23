@@ -83,36 +83,39 @@
     </div>
 
     <div th:if="${!shops.isEmpty()}" class="shops-list">
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Business Type</th>
-                <th>Description</th>
-                <th>Tags</th>
-                <th>Currency</th>
-                <th>Contact</th>
-                <th>Social Media</th>
-                <th>Products</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="shop : ${shops}">
-                <td th:text="${shop.shopId}">1</td>
-                <td th:text="${shop.name}">Shop Name</td>
-                <td th:text="${shop.businessType}">Business Type</td>
-                <td th:text="${shop.description}">Description</td>
-                <td th:text="${shop.tags}">Tags</td>
-                <td th:text="${shop.currency}">Currency</td>
-                <td th:text="${shop.contact}">Contact</td>
-                <td th:text="${shop.socialMediaLinks}">Social Media</td>
-                <td>
-                    <a th:href="@{'/shop/' + ${shop.shopId}}" class="btn">View Products</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Business Type</th>
+                    <th>Description</th>
+                    <th>Tags</th>
+                    <th>Currency</th>
+                    <th>Contact</th>
+                    <th>Social Media</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="shop : ${shops}">
+                    <td th:text="${shop.shopId}">1</td>
+                    <td th:text="${shop.name}">Shop Name</td>
+                    <td th:text="${shop.businessType}">Business Type</td>
+                    <td class="truncate" th:text="${shop.description}" th:title="${shop.description}">Description</td>
+                    <td class="truncate" th:text="${#strings.listJoin(shop.tags, ', ')}" th:title="${#strings.listJoin(shop.tags, ', ')}">Tags</td>
+                    <td th:text="${shop.currency}">Currency</td>
+                    <td th:text="${shop.contact}">Contact</td>
+                    <td class="truncate" th:text="${shop.socialMediaLinks}" th:title="${shop.socialMediaLinks}">Social Media</td>
+                    <td>
+                        <a th:href="@{'/shop/' + ${shop.shopId}}" class="btn">View</a>
+                        <a th:href="@{'/shop/' + ${shop.shopId} + '/manage'}" class="btn">Manage</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <div class="actions">

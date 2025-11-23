@@ -38,55 +38,60 @@
     <div class="form-group">
         <h2>Existing Products</h2>
 
-        <table class="product-table">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Category</th>
-                <th>Inventory</th>
-                <th>URL</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- Show message if there are no products -->
-            <tr th:if="${#lists.isEmpty(shop.products)}">
-                <td colspan="8">No products have been added yet.</td>
-            </tr>
+        <!-- WRAPPED IN table-wrapper div for responsiveness -->
+        <div class="table-wrapper">
+            <table class="product-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Inventory</th>
+                    <th>URL</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Show message if there are no products -->
+                <tr th:if="${#lists.isEmpty(shop.products)}">
+                    <td colspan="8">No products have been added yet.</td>
+                </tr>
 
-            <!-- List all products for this shop -->
-            <tr th:each="product : ${shop.products}">
-                <td th:text="${product.productID}">1</td>
-                <td th:text="${product.productName}">Sample Product</td>
-                <td th:text="${product.productDescription}">Sample description...</td>
-                <td th:text="${product.productPrice}">0.00</td>
-                <td th:text="${product.productCategory}">Category</td>
-                <td th:text="${product.productInventory}">0</td>
-                <td>
-                    <a th:href="${product.pictureUrl}"
-                       th:text="${product.pictureUrl}"
-                       target="_blank">
-                        https://example.com
-                    </a>
-                </td>
-                <td>
-                    <!-- Edit link: -->
-                    <a th:href="@{/shop/{shopId}/products/{productId}/edit(shopId=${shop.shopId}, productId=${product.productID})}"
-                       class="btn btn-primary">Edit</a>
+                <!-- List all products for this shop -->
+                <tr th:each="product : ${shop.products}">
+                    <td th:text="${product.productID}">1</td>
+                    <td th:text="${product.productName}">Sample Product</td>
+                    <td class="truncate" th:text="${product.productDescription}" th:title="${product.productDescription}">Sample description...</td>
+                    <td th:text="${product.productPrice}">0.00</td>
+                    <td th:text="${product.productCategory}">Category</td>
+                    <td th:text="${product.productInventory}">0</td>
+                    <td class="truncate">
+                        <a th:href="${product.pictureUrl}"
+                           th:text="${product.pictureUrl}"
+                           th:title="${product.pictureUrl}"
+                           target="_blank">
+                            https://example.com
+                        </a>
+                    </td>
+                    <td>
+                        <!-- Edit link: -->
+                        <a th:href="@{/shop/{shopId}/products/{productId}/edit(shopId=${shop.shopId}, productId=${product.productID})}"
+                           class="btn btn-primary">Edit</a>
 
-                    <!-- Delete form: -->
-                    <form th:action="@{/products/{id}/delete(id=${product.productID})}"
-                          method="post"
-                          class="inline-form">
-                        <button type="submit" class="btn btn-secondary">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                        <!-- Delete form: -->
+                        <form th:action="@{/products/{id}/delete(id=${product.productID})}"
+                              method="post"
+                              class="inline-form"
+                              onsubmit="return confirm('Are you sure you want to delete this product?');">
+                            <button type="submit" class="btn btn-secondary">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Add new product form -->
