@@ -147,7 +147,7 @@ public class ShopController {
         return "redirect:/select-shop";
     }
 
-    // ========== REST API ENDPOINTS (for tests) ==========
+
 
     /**
      * REST API endpoint to create a shop.
