@@ -34,11 +34,9 @@
         <p>View, edit, delete, and add products for this shop.</p>
     </div>
 
-    <!-- Existing products list -->
     <div class="form-group">
         <h2>Existing Products</h2>
 
-        <!-- WRAPPED IN table-wrapper div for responsiveness -->
         <div class="table-wrapper">
             <table class="product-table">
                 <thead>
@@ -54,12 +52,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Show message if there are no products -->
                 <tr th:if="${#lists.isEmpty(shop.products)}">
                     <td colspan="8">No products have been added yet.</td>
                 </tr>
 
-                <!-- List all products for this shop -->
                 <tr th:each="product : ${shop.products}">
                     <td th:text="${product.productID}">1</td>
                     <td th:text="${product.productName}">Sample Product</td>
@@ -76,11 +72,9 @@
                         </a>
                     </td>
                     <td>
-                        <!-- Edit link: -->
                         <a th:href="@{/shop/{shopId}/products/{productId}/edit(shopId=${shop.shopId}, productId=${product.productID})}"
                            class="btn btn-primary">Edit</a>
 
-                        <!-- Delete form: -->
                         <form th:action="@{/products/{id}/delete(id=${product.productID})}"
                               method="post"
                               class="inline-form"
@@ -94,11 +88,9 @@
         </div>
     </div>
 
-    <!-- Add new product form -->
     <div class="form-group">
         <h2>Add New Product</h2>
 
-        <!-- Uses /shop/{shopId}/products/add -->
         <form th:action="@{/shop/{shopId}/products/add(shopId=${shop.shopId})}"
               th:object="${newProduct}"
               method="post">
