@@ -6,139 +6,349 @@
     <title>View Existing Shops</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
-        .search-container {
-            margin: 20px 0 30px 0;
-            padding: 20px;
-            background-color: #f8f9fa;
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --surface: #ffffff;
+            --background: #f3f4f6;
+            --text-main: #111827;
+            --text-sub: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* --- Header Section --- */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-main);
+        }
+
+        .btn-create {
+            background-color: var(--text-main);
+            color: white;
+            padding: 10px 20px;
             border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn-create:hover {
+            background-color: #333;
+        }
+
+        /* --- Search Section --- */
+        .search-card {
+            background: var(--surface);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+            border: 1px solid var(--border);
         }
 
         .search-form {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             margin-bottom: 15px;
         }
 
         .search-input {
             flex: 1;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
+            padding: 14px 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.2s, box-shadow 0.2s;
         }
 
         .search-input:focus {
             outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        .search-type-selector {
+        .btn-search {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-search:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .search-options {
             display: flex;
             gap: 20px;
+            color: var(--text-sub);
+            font-size: 0.9rem;
             align-items: center;
         }
 
-        .search-type-selector label {
+        .radio-label {
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-weight: normal;
+            gap: 8px;
             cursor: pointer;
+            user-select: none;
         }
 
-        .search-type-selector input[type="radio"] {
-            cursor: pointer;
+        .radio-label input {
+            accent-color: var(--primary);
+            transform: scale(1.2);
         }
+
+        /* --- Grid Layout (Replaces Table) --- */
+        .shops-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 25px;
+        }
+
+        /* --- Shop Card --- */
+        .shop-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .shop-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            padding: 20px 20px 10px 20px;
+            border-bottom: 1px solid #f9fafb;
+        }
+
+        .shop-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            color: var(--text-main);
+        }
+
+        .business-type {
+            display: inline-block;
+            background-color: #eff6ff;
+            color: var(--primary);
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .card-body {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .shop-desc {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+
+            /* Truncate to 3 lines */
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag-pill {
+            background-color: #f3f4f6;
+            color: #4b5563;
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .card-footer {
+            padding: 15px 20px;
+            background-color: #f9fafb;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-card {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .btn-visit {
+            background-color: var(--primary);
+            color: white;
+            border: 1px solid var(--primary);
+        }
+
+        .btn-visit:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-manage {
+            background-color: white;
+            color: var(--text-main);
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-manage:hover {
+            background-color: #f3f4f6;
+            border-color: #9ca3af;
+        }
+
+        /* --- Utilities --- */
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            background: white;
+            border-radius: 12px;
+            color: var(--text-sub);
+            border: 1px dashed var(--border);
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 40px;
+            text-align: center;
+            color: var(--text-sub);
+            text-decoration: none;
+        }
+        .back-link:hover { text-decoration: underline; }
+
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Existing Shops</h1>
 
-    <div class="search-container">
+    <div class="page-header">
+        <h1>Discover Shops</h1>
+        <a th:href="@{/create-shop}" class="btn-create">+ Open New Shop</a>
+    </div>
+
+    <div class="search-card">
         <form action="/search-results" method="get" class="search-form">
             <input type="text"
                    name="query"
                    class="search-input"
-                   placeholder="Search by shop name or tag..."
+                   placeholder="Search for shops..."
                    required>
-            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="submit" class="btn-search">Search</button>
         </form>
 
-        <div class="search-type-selector">
-            <span>Search by:</span>
-            <label>
+        <div class="search-options">
+            <span>Filter by:</span>
+            <label class="radio-label">
                 <input type="radio" name="type" value="name" checked> Shop Name
             </label>
-            <label>
+            <label class="radio-label">
                 <input type="radio" name="type" value="tag"> Tag
             </label>
         </div>
     </div>
 
-    <div th:if="${shops.isEmpty()}" class="no-shops">
-        <p>No shops found. <a th:href="@{/create-shop}">Create your first shop</a></p>
+    <div th:if="${shops.isEmpty()}" class="empty-state">
+        <h2>No shops found</h2>
+        <p>It looks a bit empty here. Why not start the first shop?</p>
+        <br>
+        <a th:href="@{/create-shop}" class="btn-create">Create Shop</a>
     </div>
 
-    <div th:if="${!shops.isEmpty()}" class="shops-list">
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Business Type</th>
-                    <th>Description</th>
-                    <th>Tags</th>
-                    <th>Currency</th>
-                    <th>Contact</th>
-                    <th>Social Media</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="shop : ${shops}">
-                    <td th:text="${shop.shopId}">1</td>
-                    <td th:text="${shop.name}">Shop Name</td>
-                    <td th:text="${shop.businessType}">Business Type</td>
-                    <td class="truncate" th:text="${shop.description}" th:title="${shop.description}">Description</td>
-                    <td class="truncate" th:text="${#strings.listJoin(shop.tags, ', ')}" th:title="${#strings.listJoin(shop.tags, ', ')}">Tags</td>
-                    <td th:text="${shop.currency}">Currency</td>
-                    <td th:text="${shop.contact}">Contact</td>
-                    <td class="truncate" th:text="${shop.socialMediaLinks}" th:title="${shop.socialMediaLinks}">Social Media</td>
-                    <td>
-                        <a th:href="@{'/shop/' + ${shop.shopId}}" class="btn">View</a>
-                        <a th:href="@{'/shop/' + ${shop.shopId} + '/manage'}" class="btn">Manage</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+    <div th:if="${!shops.isEmpty()}" class="shops-grid">
+
+        <div th:each="shop : ${shops}" class="shop-card">
+
+            <div class="card-header">
+                <h3 class="shop-name" th:text="${shop.name}">PieBros</h3>
+                <span class="business-type" th:text="${shop.businessType}">Food & Beverage</span>
+            </div>
+
+            <div class="card-body">
+                <p class="shop-desc" th:text="${shop.description}">
+                    The shops for all the pie lovers...
+                </p>
+
+                <div class="tags-container" th:if="${shop.tags != null}">
+                    <span th:each="tag : ${shop.tags}" class="tag-pill" th:text="${tag}">Grocery</span>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <a th:href="@{'/shop/' + ${shop.shopId}}" class="btn-card btn-visit">Visit Shop</a>
+                <a th:href="@{'/shop/' + ${shop.shopId} + '/manage'}" class="btn-card btn-manage">Manage</a>
+            </div>
+
         </div>
     </div>
 
-    <div class="actions">
-        <a th:href="@{/create-shop}" class="btn">Create New Shop</a>
-        <a th:href="@{/}" class="btn">Back to Home</a>
-    </div>
+    <a th:href="@{/}" class="back-link">← Back to Homepage</a>
 </div>
 
 <script>
-    // Update the form action and placeholder based on selected search type
-    const form = document.querySelector('.search-form');
+    // Search toggle logic (keeps the placeholder relevant)
     const radios = document.querySelectorAll('input[name="type"]');
+    const searchInput = document.querySelector('.search-input');
 
     radios.forEach(radio => {
         radio.addEventListener('change', (e) => {
-            const searchInput = document.querySelector('.search-input');
             if (e.target.value === 'tag') {
-                searchInput.placeholder = 'Search by tag...';
+                searchInput.placeholder = 'Search by category tag (e.g. tech, food)...';
             } else {
                 searchInput.placeholder = 'Search by shop name...';
             }
         });
     });
 
+    // Form submission logic
+    const form = document.querySelector('.search-form');
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         const query = document.querySelector('input[name="query"]').value;

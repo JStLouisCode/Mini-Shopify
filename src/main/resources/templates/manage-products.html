@@ -16,6 +16,7 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
+            vertical-align: middle;
         }
 
         table.product-table th {
@@ -24,6 +25,15 @@
 
         .inline-form {
             display: inline;
+        }
+
+        .product-image-thumb {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            display: block;
         }
     </style>
 </head>
@@ -42,14 +52,11 @@
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Name</th>
-                    <th>Description</th>
+                    <th style="width: 80px;">Image</th> <th>Name</th>       <th>Description</th>
                     <th>Price</th>
                     <th>Category</th>
                     <th>Inventory</th>
-                    <th>URL</th>
-                    <th>Actions</th>
-                </tr>
+                    <th>Actions</th>    </tr>
                 </thead>
                 <tbody>
                 <tr th:if="${#lists.isEmpty(shop.products)}">
@@ -58,19 +65,30 @@
 
                 <tr th:each="product : ${shop.products}">
                     <td th:text="${product.productID}">1</td>
-                    <td th:text="${product.productName}">Sample Product</td>
-                    <td class="truncate" th:text="${product.productDescription}" th:title="${product.productDescription}">Sample description...</td>
-                    <td th:text="${product.productPrice}">0.00</td>
-                    <td th:text="${product.productCategory}">Category</td>
-                    <td th:text="${product.productInventory}">0</td>
-                    <td class="truncate">
-                        <a th:href="${product.pictureUrl}"
-                           th:text="${product.pictureUrl}"
-                           th:title="${product.pictureUrl}"
-                           target="_blank">
-                            https://example.com
+
+                    <td>
+                        <a th:if="${product.pictureUrl != null and !#strings.isEmpty(product.pictureUrl)}"
+                           th:href="${product.pictureUrl}" target="_blank" title="View Full Size">
+                            <img th:src="${product.pictureUrl}"
+                                 class="product-image-thumb"
+                                 alt="Product"
+                                 onerror="this.onerror=null;this.src='https://placehold.co/100?text=X';"/>
                         </a>
+                        <span th:unless="${product.pictureUrl != null and !#strings.isEmpty(product.pictureUrl)}">
+                     <img src="https://placehold.co/100?text=No+Img" class="product-image-thumb" alt="None"/>
+                 </span>
                     </td>
+
+                    <td th:text="${product.productName}">Sample Product</td>
+
+                    <td class="truncate" th:text="${product.productDescription}" th:title="${product.productDescription}">Sample description...</td>
+
+                    <td th:text="${product.productPrice}">0.00</td>
+
+                    <td th:text="${product.productCategory}">Category</td>
+
+                    <td th:text="${product.productInventory}">0</td>
+
                     <td>
                         <a th:href="@{/shop/{shopId}/products/{productId}/edit(shopId=${shop.shopId}, productId=${product.productID})}"
                            class="btn btn-primary">Edit</a>
@@ -86,7 +104,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
 
     <div class="form-group">
         <h2>Add New Product</h2>
@@ -130,8 +147,7 @@
 
             <div class="form-group">
                 <label for="pictureUrl">Picture URL</label>
-                <input type="text" id="pictureUrl" th:field="*{pictureUrl}"
-                       placeholder="https://example.com/product"/>
+                <input type="text" id="pictureUrl" th:field="*{pictureUrl}" placeholder="https://example.com/product"/>
             </div>
 
             <div class="button-group">
@@ -140,6 +156,7 @@
             </div>
         </form>
     </div>
+</div>
 </div>
 </body>
 </html>

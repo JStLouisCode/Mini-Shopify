@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <title>Edit Product</title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .product-image-preview {
+            display: block;
+            max-width: 200px;
+            max-height: 200px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            padding: 4px;
+            border-radius: 4px;
+            object-fit: contain;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -67,10 +79,18 @@
         <!-- Picture URL -->
         <div class="form-group">
             <label for="pictureUrl">Picture URL</label>
+
+            <div th:if="${product.pictureUrl != null and !#strings.isEmpty(product.pictureUrl)}">
+                <img th:src="${product.pictureUrl}"
+                     class="product-image-preview"
+                     alt="Current Product Image"
+                     onerror="this.style.display='none'"/> </div>
+
             <input type="text"
                    id="pictureUrl"
                    th:field="*{pictureUrl}"
                    placeholder="https://example.com/product"/>
+            <small>Enter a public URL for the product image.</small>
         </div>
 
         <!-- Buttons -->

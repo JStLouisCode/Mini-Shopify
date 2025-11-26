@@ -3,37 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${shop.name} + ' — Products'">Shop Products</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        body { font-family: Arial, sans-serif; margin: 30px; }
-        .shop-header { margin-bottom: 20px; }
+        :root {
+            --primary-color: #2563eb;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-gray: #f9fafb;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-gray);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 40px;
+        }
+
+        /* --- Header Styling --- */
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-cart {
+            background-color: var(--text-dark);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+        .btn-cart:hover { opacity: 0.9; }
+
+        .shop-header {
+            text-align: center;
+            margin-bottom: 50px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .shop-header h1 { font-size: 2.5rem; margin-bottom: 10px; color: #111; }
+        .shop-header p { font-size: 1.1rem; color: var(--text-light); }
+
         .tag {
             display: inline-block;
-            background: #e0e0e0;
-            padding: 5px 10px;
-            border-radius: 6px;
-            margin-right: 5px;
+            background: #e5e7eb;
+            color: #374151;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 5px 2px;
         }
+
+        hr { border: 0; height: 1px; background: #e5e7eb; margin: 40px 0; }
+        h2 { font-size: 1.8rem; margin-bottom: 30px; color: #111; text-align: center; }
+
+        /* --- GRID --- */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* --- CARD --- */
         .product-card {
-            border: 1px solid #ccc;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 6px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0,0,0,0.05);
         }
-        .product-title { font-size: 20px; font-weight: bold; }
-        .empty-msg { font-size: 18px; opacity: 0.6; }
+
+        .product-card:hover { transform: translateY(-5px); }
+
+        /* --- IMAGE --- */
+        .image-container {
+            width: 100%;
+            height: 250px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #f3f4f6;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .product-image-card {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* --- CONTENT --- */
+        .card-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .category-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .product-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            color: #111;
+            line-height: 1.3;
+        }
+
+        .product-desc {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid #f3f4f6;
+        }
+
+        .price-tag {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #059669;
+        }
+
+        .btn-add {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-add:hover { background-color: #1d4ed8; }
+
+        .empty-msg { text-align: center; color: var(--text-light); margin-top: 50px; }
     </style>
 </head>
 
 <body>
 
-<!-- Header for the shop -->
+<div class="top-nav">
+    <a href="/cart" class="btn-cart">
+        🛒 View Cart
+    </a>
+</div>
+
 <div class="shop-header">
     <h1 th:text="${shop.name}">Shop Name</h1>
-
     <p th:text="${shop.description}">Shop description goes here...</p>
-
-    <!-- TAGS -->
     <div th:if="${shop.tags != null}">
         <span th:each="tag : ${shop.tags}" class="tag" th:text="${tag}"></span>
     </div>
@@ -41,35 +197,45 @@
 
 <hr/>
 
-<h2>Products</h2>
+<div style="max-width: 1200px; margin: 0 auto;">
+    <h2>Our Products</h2>
 
-<!-- This here is the case without products in it -->
-<p class="empty-msg" th:if="${#lists.isEmpty(shop.products)}">
-    This shop has no products yet.
-</p>
-
-<!-- This here lists the products -->
-<div th:each="p : ${shop.products}" class="product-card">
-
-    <div class="product-title" th:text="${p.productName}">Product Name</div>
-
-    <p><strong>Description:</strong>
-        <span th:text="${p.productDescription}">Description here</span>
+    <p class="empty-msg" th:if="${#lists.isEmpty(shop.products)}">
+        This shop has no products yet.
     </p>
 
-    <p><strong>Category:</strong>
-        <span th:text="${p.productCategory}">Category here</span>
-    </p>
+    <div class="products-grid">
+        <div th:each="p : ${shop.products}" class="product-card">
 
-    <p><strong>Price:</strong>
-        <span th:text="${p.productPrice}"></span>
-        <span th:text="${shop.currency}">CAD</span>
-    </p>
+            <div class="image-container">
+                <img th:if="${p.pictureUrl != null and !#strings.isEmpty(p.pictureUrl)}"
+                     th:src="${p.pictureUrl}" alt="Product Image" class="product-image-card"
+                     onerror="this.onerror=null;this.src='https://placehold.co/600x400?text=No+Image';"/>
+                <img th:unless="${p.pictureUrl != null and !#strings.isEmpty(p.pictureUrl)}"
+                     src="https://placehold.co/600x400?text=No+Image" alt="Placeholder" class="product-image-card"/>
+            </div>
 
-    <p><strong>Quantity Available:</strong>
-        <span th:text="${p.productInventory}">0</span>
-    </p>
+            <div class="card-content">
+                <div class="category-label" th:text="${p.productCategory}">Category</div>
+                <div class="product-title" th:text="${p.productName}">Product Name</div>
+                <div class="product-desc" th:text="${p.productDescription}">Description here...</div>
 
+                <div class="card-footer">
+                    <div class="price-tag">
+                        <span th:text="${p.productPrice}"></span>
+                        <span th:text="${shop.currency}" style="font-size: 0.5em;">CAD</span>
+                    </div>
+
+                    <form action="/cart/add" method="post">
+                        <input type="hidden" name="productId" th:value="${p.productID}">
+                        <input type="hidden" name="shopId" th:value="${shop.shopId}">
+                        <button type="submit" class="btn-add">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 </body>
