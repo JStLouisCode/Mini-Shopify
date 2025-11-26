@@ -22,7 +22,30 @@
             padding: 40px;
         }
 
-        /* Header Styling */
+        /* --- Header Styling --- */
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-cart {
+            background-color: var(--text-dark);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+        .btn-cart:hover { opacity: 0.9; }
+
         .shop-header {
             text-align: center;
             margin-bottom: 50px;
@@ -31,16 +54,8 @@
             margin-right: auto;
         }
 
-        .shop-header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            color: #111;
-        }
-
-        .shop-header p {
-            font-size: 1.1rem;
-            color: var(--text-light);
-        }
+        .shop-header h1 { font-size: 2.5rem; margin-bottom: 10px; color: #111; }
+        .shop-header p { font-size: 1.1rem; color: var(--text-light); }
 
         .tag {
             display: inline-block;
@@ -53,58 +68,42 @@
             margin: 5px 2px;
         }
 
-        hr {
-            border: 0;
-            height: 1px;
-            background: #e5e7eb;
-            margin: 40px 0;
-        }
+        hr { border: 0; height: 1px; background: #e5e7eb; margin: 40px 0; }
+        h2 { font-size: 1.8rem; margin-bottom: 30px; color: #111; text-align: center; }
 
-        h2 {
-            font-size: 1.8rem;
-            margin-bottom: 30px;
-            color: #111;
-            text-align: center; /* Centered title looks cleaner */
-        }
-
-        /* --- THE GRID WRAPPER --- */
-        /* This was missing in your HTML body */
+        /* --- GRID --- */
         .products-grid {
             display: grid;
-            /* Creates a responsive grid: minimum column width 300px, max 1 fraction of space */
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px; /* Space between cards */
+            gap: 30px;
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        /* --- CARD STYLING --- */
+        /* --- CARD --- */
         .product-card {
             background: var(--card-bg);
-            border-radius: 16px; /* Softer, modern corners */
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
             display: flex;
             flex-direction: column;
-            border: 1px solid rgba(0,0,0,0.05); /* Subtle border definition */
+            border: 1px solid rgba(0,0,0,0.05);
         }
 
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
+        .product-card:hover { transform: translateY(-5px); }
 
-        /* --- IMAGE STYLING --- */
+        /* --- IMAGE --- */
         .image-container {
             width: 100%;
-            height: 250px; /* Fixed height container */
+            height: 250px;
             background-color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
             border-bottom: 1px solid #f3f4f6;
-            padding: 15px; /* Adds breathing room around the image */
+            padding: 15px;
             box-sizing: border-box;
         }
 
@@ -113,11 +112,10 @@
             max-height: 100%;
             width: auto;
             height: auto;
-            object-fit: contain; /* CRITICAL: Ensures the WHOLE image is seen, no cropping */
-            border-radius: 4px;
+            object-fit: contain;
         }
 
-        /* --- CONTENT STYLING --- */
+        /* --- CONTENT --- */
         .card-content {
             padding: 20px;
             display: flex;
@@ -147,7 +145,7 @@
             color: var(--text-light);
             margin-bottom: 20px;
             line-height: 1.5;
-            flex-grow: 1; /* Pushes the footer down */
+            flex-grow: 1;
         }
 
         .card-footer {
@@ -160,34 +158,38 @@
         }
 
         .price-tag {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 700;
             color: #059669;
         }
 
-        .inventory-badge {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            background: #f3f4f6;
-            padding: 4px 8px;
+        .btn-add {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
             border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
         }
+        .btn-add:hover { background-color: #1d4ed8; }
 
-        .empty-msg {
-            text-align: center;
-            font-size: 1.2rem;
-            color: var(--text-light);
-            margin-top: 50px;
-        }
+        .empty-msg { text-align: center; color: var(--text-light); margin-top: 50px; }
     </style>
 </head>
 
 <body>
 
+<div class="top-nav">
+    <a href="/cart" class="btn-cart">
+        🛒 View Cart
+    </a>
+</div>
+
 <div class="shop-header">
     <h1 th:text="${shop.name}">Shop Name</h1>
     <p th:text="${shop.description}">Shop description goes here...</p>
-
     <div th:if="${shop.tags != null}">
         <span th:each="tag : ${shop.tags}" class="tag" th:text="${tag}"></span>
     </div>
@@ -203,36 +205,32 @@
     </p>
 
     <div class="products-grid">
-
         <div th:each="p : ${shop.products}" class="product-card">
 
             <div class="image-container">
                 <img th:if="${p.pictureUrl != null and !#strings.isEmpty(p.pictureUrl)}"
-                     th:src="${p.pictureUrl}"
-                     alt="Product Image"
-                     class="product-image-card"
+                     th:src="${p.pictureUrl}" alt="Product Image" class="product-image-card"
                      onerror="this.onerror=null;this.src='https://placehold.co/600x400?text=No+Image';"/>
-
                 <img th:unless="${p.pictureUrl != null and !#strings.isEmpty(p.pictureUrl)}"
-                     src="https://placehold.co/600x400?text=No+Image"
-                     alt="Placeholder"
-                     class="product-image-card"/>
+                     src="https://placehold.co/600x400?text=No+Image" alt="Placeholder" class="product-image-card"/>
             </div>
 
             <div class="card-content">
                 <div class="category-label" th:text="${p.productCategory}">Category</div>
                 <div class="product-title" th:text="${p.productName}">Product Name</div>
-
-                <div class="product-desc" th:text="${p.productDescription}">
-                    Description here...
-                </div>
+                <div class="product-desc" th:text="${p.productDescription}">Description here...</div>
 
                 <div class="card-footer">
                     <div class="price-tag">
                         <span th:text="${p.productPrice}"></span>
-                        <span th:text="${shop.currency}" style="font-size: 0.5em; vertical-align: middle;">CAD</span>
+                        <span th:text="${shop.currency}" style="font-size: 0.5em;">CAD</span>
                     </div>
-                    <div class="inventory-badge" th:text="${p.productInventory} + ' available'">10 available</div>
+
+                    <form action="/cart/add" method="post">
+                        <input type="hidden" name="productId" th:value="${p.productID}">
+                        <input type="hidden" name="shopId" th:value="${shop.shopId}">
+                        <button type="submit" class="btn-add">Add to Cart</button>
+                    </form>
                 </div>
             </div>
 
