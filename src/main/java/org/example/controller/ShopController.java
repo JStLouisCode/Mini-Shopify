@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*; // Make sure this is imported
+import org.springframework.web.bind.annotation.*;
 import org.example.model.Product;
 import org.example.repository.ProductRepository;
 
@@ -51,14 +51,12 @@ public class ShopController {
             "Other"
     );
 
-    // --- ADDED BACK ---
-    // You need this for your homepage to load
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("shops", shopRepository.findAll());
-        return "homepage"; // Assuming homepage.html is your main view
+        return "homepage";
     }
-    // -----------------
+
 
     @GetMapping("/create-shop")
     public String createShopForm(Model model) {
@@ -74,7 +72,13 @@ public class ShopController {
             @Valid @ModelAttribute("shop") Shop shop,
             BindingResult result,
             Model model
-    ) {
+    )
+
+    {
+        if (shopRepository.findByName(shop.getName()).isPresent()) {
+            result.rejectValue("name", "duplicate", "A shop with this name already exists.");
+        }
+
         if (result.hasErrors()) {
             model.addAttribute("allTags", PREDEFINED_TAGS);
             model.addAttribute("allCurrencies", PREDEFINED_CURRENCIES);
@@ -119,7 +123,6 @@ public class ShopController {
      */
     @GetMapping("/view-existing-shops")
     public String ViewExistingShops(Model model) {
-        // Retrieve all shops from database and add to model
         model.addAttribute("shops", shopRepository.findAll());
         return "view-existing-shops";
     }
@@ -134,11 +137,8 @@ public class ShopController {
         model.addAttribute("shops", shopRepository.findAll());
         return "select-shop";
     }
-    // -----------------
 
     @GetMapping("/edit-shop/{id}")
-    // === FIX WAS HERE ===
-    // You were missing @PathVariable("id") before Long id
     public String editShopForm(@PathVariable("id") Long id, Model model) {
         Optional<Shop> shop = shopRepository.findById(id);
         if (shop.isPresent()) {

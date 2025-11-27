@@ -1,6 +1,6 @@
 #FileLock
-#Wed Nov 26 12:58:05 EST 2025
-hostName=DESKTOP-HM1H0VF
-id=19ac150bd7ceb4362a9dcc6b9475410125e4d76a05a
+#Thu Nov 27 16:38:56 EST 2025
+hostName=LAPTOP-FOQREHUP.home
+id=19ac7414836f4c5c12ba395e95c4002d7f5ad56b40c
 method=file
-server=10.0.0.64\:59894
+server=192.168.2.46\:55405
