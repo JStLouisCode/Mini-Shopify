@@ -23,7 +23,11 @@
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
         }
 
-        .cart-table th, .cart-table td { padding: 15px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+        .cart-table th, .cart-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
         .cart-table th { background-color: #f3f4f6; font-weight: 600; }
 
         .total-section {
@@ -39,23 +43,60 @@
             margin-top: 30px;
         }
 
-        .btn { padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; border: none; cursor: pointer; }
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
         .btn-primary { background-color: #2563eb; color: white; }
         .btn-secondary { background-color: #e5e7eb; color: #374151; }
+
+        /* Small inline buttons for forms inside table */
+        .inline-form {
+            display: inline-block;
+        }
+        .inline-input {
+            width: 60px;
+            padding: 4px 6px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            margin-right: 4px;
+        }
+        .inline-btn {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .inline-btn-update {
+            background-color: #2563eb;
+            color: white;
+        }
+        .inline-btn-remove {
+            background-color: #ef4444;
+            color: white;
+            margin-left: 4px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>Your Shopping Cart</h1>
 
-    <div th:if="${#lists.isEmpty(cartItems)}">
+    <!-- Empty cart -->
+    <div th:if="${#lists.isEmpty(cart.items)}">
         <p style="text-align: center; color: #6b7280;">Your cart is empty.</p>
         <div style="text-align: center; margin-top: 20px;">
-            <a href="/" class="btn btn-secondary">Go Shopping</a>
+            <a href="/view-existing-shops" class="btn btn-secondary">Go Shopping</a>
         </div>
     </div>
 
-    <div th:if="${!#lists.isEmpty(cartItems)}">
+    <!-- Cart with items -->
+    <div th:if="${!#lists.isEmpty(cart.items)}">
         <table class="cart-table">
             <thead>
             <tr>
@@ -66,22 +107,51 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="item : ${cartItems}">
+            <tr th:each="item : ${cart.items}">
                 <td th:text="${item.product.productName}">Product</td>
-                <td th:text="${item.product.productPrice}">0.00</td>
-                <td th:text="${item.quantity}">1</td>
-                <td th:text="${item.totalPrice}">0.00</td>
+
+                <!-- Single item price -->
+                <td>
+                <span th:text="${#numbers.formatDecimal(item.product.productPrice, 1, 'COMMA', 2, 'POINT')}"></span>
+                <span th:text="${currency}">CAD</span>
+                </td>
+
+                <!-- Quantity + update/remove buttons -->
+                <td>
+                    <!-- Update quantity form -->
+                    <form th:action="@{/cart/update}" method="post" class="inline-form">
+                        <input type="hidden" name="productId" th:value="${item.product.productID}">
+                        <input class="inline-input" type="number" name="quantity" min="1"
+                               th:value="${item.quantity}">
+                        <button type="submit" class="inline-btn inline-btn-update">Update</button>
+                    </form>
+
+                    <!-- Remove item form -->
+                    <form th:action="@{/cart/remove}" method="post" class="inline-form">
+                        <input type="hidden" name="productId" th:value="${item.product.productID}">
+                        <button type="submit" class="inline-btn inline-btn-remove">Remove</button>
+                    </form>
+                </td>
+
+                <!-- Row total: price * quantity -->
+                <td>
+                    <span th:text="${#numbers.formatDecimal(item.product.productPrice * item.quantity, 1, 'COMMA', 2, 'POINT')}"></span>
+                    <span th:text="${currency}">CAD</span>
+                </td>
             </tr>
             </tbody>
         </table>
 
+        <!-- Cart total from Cart.getTotalPrice() -->
         <div class="total-section">
-            Total: <span th:text="${total}">0.00</span>
+            Total:
+            <span th:text="${#numbers.formatDecimal(cart.totalPrice, 1, 'COMMA', 2, 'POINT')}"></span>
+            <span th:text="${currency}">CAD</span>
         </div>
 
         <div class="actions">
-            <a href="/" class="btn btn-secondary">Continue Shopping</a>
-            <a href="/cart/checkout" class="btn btn-primary">Proceed to Checkout</a>
+            <a th:href="@{'/shop/'+${shopId}}" class="btn btn-secondary">Continue Shopping</a>
+            <a th:href="@{/cart/checkout}" class="btn btn-primary">Proceed to Checkout</a>
         </div>
     </div>
 </div>

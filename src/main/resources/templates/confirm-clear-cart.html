@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm Cart Reset</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+            padding: 40px;
+        }
+        .container { max-width: 600px; margin: 0 auto; text-align: center; }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        h1 { margin-bottom: 10px; }
+        p { color: #4b5563; }
+        .product-name { font-weight: 600; }
+
+        .buttons {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn-primary { background-color: #2563eb; color: white; }
+        .btn-secondary { background-color: #e5e7eb; color: #374151; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h1>Start a New Cart?</h1>
+
+        <p>
+            Your current cart contains items from another shop.<br>
+            If you continue, your existing cart will be cleared and a new cart
+            will be started for
+            <span th:text="${newShop.name}" class="product-name">New Shop</span>.
+        </p>
+
+        <p>
+            Do you want to clear your cart and add
+            <span th:text="${product.productName}" class="product-name">this item</span>?
+        </p>
+
+        <div class="buttons">
+            <!-- YES: clear cart + add item -->
+            <form th:action="@{/cart/add}" method="post">
+                <input type="hidden" name="productId" th:value="${product.productID}"/>
+                <input type="hidden" name="shopId" th:value="${newShopId}"/>
+                <input type="hidden" name="confirmClear" value="yes"/>
+                <button type="submit" class="btn btn-primary">
+                    Yes, clear cart
+                </button>
+            </form>
+
+            <!-- NO: go back to existing cart -->
+            <a th:href="@{'/cart?shopId=' + ${currentShopId}}" class="btn btn-secondary">
+                No, keep my cart
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -181,8 +181,14 @@
 
 <body>
 
+
 <div class="top-nav">
-    <a href="/cart" class="btn-cart">
+    <a href="/view-existing-shops" class="btn-cart"
+       style="margin-right: 10px;">
+        ↩ Back to Shops
+    </a>
+
+    <a th:href="@{/cart(shopId=${shop.shopId})}" class="btn-cart">
         🛒 View Cart
     </a>
 </div>
@@ -222,7 +228,7 @@
 
                 <div class="card-footer">
                     <div class="price-tag">
-                        <span th:text="${p.productPrice}"></span>
+                        <span th:text="${#numbers.formatDecimal(p.productPrice, 1, 'COMMA', 2, 'POINT')}"></span>
                         <span th:text="${shop.currency}" style="font-size: 0.5em;">CAD</span>
                     </div>
 
