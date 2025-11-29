@@ -1,15 +1,120 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Orders</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <title>All Orders</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background:#f9fafb;
+            color:#1f2937;
+            padding:40px;
+        }
+        .container {
+            max-width:1100px;
+            margin:0 auto;
+        }
+        h1 {
+            text-align:left;
+            margin-bottom:20px;
+        }
+        .orders-table {
+            width:100%;
+            border-collapse:collapse;
+            background:white;
+            border-radius:12px;
+            overflow:hidden;
+            box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .orders-table th,
+        .orders-table td {
+            padding:12px 16px;
+            text-align:left;
+            border-bottom:1px solid #e5e7eb;
+            font-size:0.95rem;
+        }
+        .orders-table th {
+            background:#f3f4f6;
+            font-weight:600;
+        }
+        .orders-table tr:last-child td {
+            border-bottom:none;
+        }
+        .status-empty {
+            text-align:center;
+            margin-top:40px;
+            color:#6b7280;
+        }
+        .btn-view {
+            padding:6px 12px;
+            border-radius:9999px;
+            border:none;
+            background:#2563eb;
+            color:white;
+            font-size:0.85rem;
+            font-weight:600;
+            text-decoration:none;
+        }
+        .btn-view:hover { background:#1d4ed8; }
+
+        .top-actions {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:16px;
+        }
+        .link-back {
+            text-decoration:none;
+            color:#2563eb;
+            font-weight:500;
+            font-size:0.9rem;
+        }
+        .link-back:hover { text-decoration:underline; }
+    </style>
 </head>
 <body>
 <div class="container">
-    <h1>Orders Page</h1>
-    <p>This page is under construction.</p>
-    <a href="/static">Go back to the main page</a>
+    <div class="top-actions">
+        <h1>All Orders</h1>
+        <a href="/" class="link-back">← Back to Homepage</a>
+    </div>
+
+    <div th:if="${#lists.isEmpty(orders)}" class="status-empty">
+        <p>No orders have been placed yet.</p>
+    </div>
+
+    <table th:if="${!#lists.isEmpty(orders)}" class="orders-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Placed</th>
+            <th>Shop</th>
+            <th>Customer</th>
+            <th>Total</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}">1</td>
+            <td th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}">
+                2025-01-01 12:00
+            </td>
+            <td th:text="${order.shopName != null ? order.shopName : 'Unknown Shop'}">Shop Name</td>
+            <td th:text="${order.customerName}">Customer Name</td>
+            <td>
+                <span th:text="${#numbers.formatDecimal(order.totalPrice, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+                <span th:text="${order.currency} ?: 'CAD'">CAD</span>
+            </td>
+            <td>
+                <a th:href="@{'/order/confirmation/' + ${order.id}}" class="btn-view">
+                    View
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

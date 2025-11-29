@@ -108,15 +108,6 @@ public class ShopController {
 
 
     /**
-     * Displays the orders page.
-     * @return the orders view name
-     */
-    @GetMapping("/orders")
-    public String orders() {
-        return "orders";
-    }
-
-    /**
      * Displays all existing shops.
      * @param model the model to add attributes to
      * @return the view-existing-shops view name

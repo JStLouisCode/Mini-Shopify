@@ -2,23 +2,193 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Checkout Complete</title>
+    <title>Checkout</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-align: center; max-width: 500px; }
-        h1 { color: #059669; margin-bottom: 10px; }
-        p { color: #4b5563; margin-bottom: 30px; }
-        .btn { background-color: #2563eb; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f9fafb;
+            color: #1f2937;
+            padding: 40px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .meta {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 25px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            margin-top: 6px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .form-actions {
+            margin-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .btn-primary, .btn-secondary {
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            line-height: 1.2;
+            font-family: inherit;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+        }
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .summary-table th,
+        .summary-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .summary-table th {
+            background-color: #f3f4f6;
+            font-weight: 600;
+        }
+        .summary-table tfoot td {
+            border-bottom: none;
+        }
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
     </style>
 </head>
 <body>
-<div class="card">
-    <h1>Order Confirmed!</h1>
-    <p>Thank you for your purchase. Your order has been processed.</p>
-    <p>Total Paid: <strong><span th:text="${total}">0.00</span></strong></p>
-    <br>
-    <a href="/" class="btn">Back to Shops</a>
+<div class="container">
+    <div th:if="${errorMessage}" style="color:#b91c1c; margin-bottom:10px;">
+        <p th:text="${errorMessage}"></p>
+    </div>
+    <h1>Checkout</h1>
+    <div class="meta">
+        <span th:if="${shop != null}">
+            Shop: <strong th:text="${shop.name}">Shop Name</strong>
+        </span>
+        <span th:if="${shop == null}">
+            Shop: <strong>Unknown</strong>
+        </span>
+    </div>
+
+    <div class="card">
+        <h2>Order Summary</h2>
+
+        <table class="summary-table">
+            <thead>
+            <tr>
+                <th>Product</th>
+                <th style="width: 70px;">Qty</th>
+                <th>Line Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${cart.items}">
+                <td th:text="${item.product.productName}">Product</td>
+                <td th:text="${item.quantity}">1</td>
+                <td>
+                    <span th:text="${#numbers.formatDecimal(item.product.productPrice * item.quantity, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+                    <span th:text="${currency} ?: 'CAD'">CAD</span>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="2" style="font-weight:700;">Total</td>
+                <td style="font-weight:700;">
+                    <span th:text="${#numbers.formatDecimal(cart.totalPrice, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+                    <span th:text="${currency} ?: 'CAD'">CAD</span>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+
+    <!-- Checkout form -->
+        <div class="card">
+            <h2>Your Details</h2>
+
+            <form th:action="@{/cart/checkout}" method="post" th:object="${checkoutForm}">
+
+                <label for="name">Name</label>
+                <input id="name" type="text" th:field="*{name}" required />
+
+                <label for="email">Email</label>
+                <input id="email" type="email" th:field="*{email}" required />
+
+                <label for="address">Shipping Address</label>
+                <input id="address" th:field="*{address}" required />
+
+                <div class="form-actions">
+                    <a th:href="@{'/cart?shopId=' + ${shop.shopId}}" class="btn-secondary">
+                        Back to Cart
+                    </a>
+
+                    <button type="submit" class="btn-primary">
+                        Place Order
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 </html>
