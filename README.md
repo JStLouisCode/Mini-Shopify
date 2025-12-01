@@ -25,31 +25,19 @@ This application is an e-commerce platform that allows merchants to create their
 
 ---
 
-## Current Project Status (Milestone 2 Complete)
+## Final Project Status  (Milestone 3)
 
-We have successfully completed **Milestone 2**. We currently have much of the funcitonality for the final build complete, but no the whole way.
+We have completed **Milestone 3** with the final features added.
 
 ### Completed Features
-* **Shop Creation:** Merchants can create a new shop by filling out a form with the shop's name, tags, description, and other details.
-* **View All Shops:** A central page exists to view all shops currently in the system.
-* **View All Products in a Shop:** One can now view all of the products that currently exist inside of a shop
-* **Manage Products:** Merchants now have page to manage products
-* **Shop Customization:** Merchants have the ability to edit and update the details of their existing shops.
+* **Customer Product Page:** Creates a page that lets users click on and inspect each product individually.
+* **Search Functionality:** Implements a search feature for customers to find shops, either by a direct name lookup or by searching via tags/categories.
+* **Shopping Cart:** Development of the shopping cart functionality allows users to add products.
 
 ### Project Backlog
 Our full project backlog, user stories, and task breakdown are managed on our GitHub Projects Kanban board.
 
 [**View our Project Kanban Board**](https://github.com/JStLouisCode/Mini-Shopify/projects)
-
----
-
-## Plan for Next Sprint (Milestone 3)
-
-Our focus for Milestone 3 is to build out the the final feature, especially for adding pictures features.
-
-* **Customer Product Page:** Create a page that lets users click on and inspect each product indivdually
-* **Search Functionality:** Implement a search feature for customers to find shops, either by a direct name lookup or by searching via tags/categories.
-* **Shopping Cart:** Begin development of the shopping cart functionality, allowing users to add products.
 
 ---
 
