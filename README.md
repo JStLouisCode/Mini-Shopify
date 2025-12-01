@@ -86,7 +86,7 @@ This application is configured for Continuous Integration (CI) using **GitHub Ac
 * **Continuous Integration:** The workflow (defined in `.github/workflows/`) automatically triggers on every push or pull request to the `main` branch. It builds the project, runs all unit and integration tests.
 * **Continuous Deployment:** On a successful merge to `main`, the Docker image is built and pushed to AWS, where it is deployed.
 
-**Live Application URL:** `[Your AWS Deployed App URL Here]`
+[**Live Application URL:**](http://mini-shopify-alb-1709347686.ca-central-1.elb.amazonaws.com/)
 
 ---
 
@@ -129,3 +129,8 @@ This diagram shows the sequence of events when a merchant creates a new shop.
 This diagram shows the sequence of events when a merchant creates a new product.
 
 ![UML Sequence Diagram](PostProductSequence.png)
+
+### UML Sequence Diagram (Checkout Process)
+This diagram shows the sequence of events when a purchase and inventory deduction occurs.
+
+![UML Sequence Diagram](CheckoutSequence.png)
